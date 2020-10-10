@@ -31,9 +31,31 @@ function randomEngine (position){
 	return moves[index];
 }
 
+function evalPosition (position){
+	let chess = new Chess(position);
+	let fen = chess.fen();
+	let turn = chess.turn() == 'b' ? -1 : 1;
 
-function minimaxEngine(position) {
-	
+	if (chess.game_over()) {
+		if (chess.in_checkmate()) {
+			return turn * Infinity;
+		}
+		if (
+			chess.in_draw() ||
+			chess.in_stalemate()
+		) {
+			return 0;
+		}
+
+		return 'What just happened?';
+	}
+
+	pos = fen.split(' ')[0];
+	print(pos.match(/[A-Z]/g));
+}
+
+function minimaxEngine (position){
+	let chess = new Chess(position);
 }
 
 function onDrop (source, target){
