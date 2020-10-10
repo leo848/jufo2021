@@ -18,26 +18,22 @@ function onDragStart (
 	if (piece.search(/^b/) !== -1) return false;
 }
 
-function makeRandomMove (){
-	var possibleMoves = game.moves();
-
-	// game over
-	if (possibleMoves.length === 0) return;
-
-	var randomIdx = Math.floor(
-		Math.random() * possibleMoves.length,
-	);
-	game.move(possibleMoves[randomIdx]);
-	board.position(game.fen());
-}
-
-function engine (position){
+function randomEngine (position){
 	let chess = new Chess(position);
 	print(chess.fen());
 	print(position);
 
 	let moves = chess.moves();
-	print(moves);
+	var index = Math.floor(
+		Math.random() * moves.length,
+	);
+
+	return moves[index];
+}
+
+
+function minimaxEngine(position) {
+	
 }
 
 function onDrop (source, target){
@@ -54,7 +50,9 @@ function onDrop (source, target){
 	console.log(game.pgn());
 
 	// make random legal move for black
-	window.setTimeout(makeRandomMove, 250);
+	window.setTimeout(() => {
+		game.move(randomEngine(game.fen()));
+	}, 0);
 }
 
 // update the board position after the piece snap
