@@ -20,8 +20,6 @@ function onDragStart (
 
 function randomEngine (position){
 	let chess = new Chess(position);
-	print(chess.fen());
-	print(position);
 
 	let moves = chess.moves();
 	var index = Math.floor(
@@ -36,9 +34,11 @@ function evalPosition (position){
 	let fen = chess.fen();
 	let turn = chess.turn() == 'b' ? -1 : 1;
 
+	let eval = 0;
+
 	if (chess.game_over()) {
 		if (chess.in_checkmate()) {
-			return turn * Infinity;
+			return -turn * Infinity;
 		}
 		if (
 			chess.in_draw() ||
@@ -51,11 +51,136 @@ function evalPosition (position){
 	}
 
 	pos = fen.split(' ')[0];
-	print(pos.match(/[A-Z]/g));
+	pcs = pos.match(/[a-zA-Z]/g);
+
+	for (let i = 0; i < pcs.length; i++) {
+		eval += PIECE_VALUES[pcs[i]];
+		eval = Number(eval.toFixed(2));
+	}
+
+	return eval;
 }
 
-function minimaxEngine (position){
+function minimaxEngine (position, depth){
 	let chess = new Chess(position);
+	let turn = chess.turn() == 'b' ? -1 : 1;
+	let maximizer =
+		chess.turn() == 'b' ? false : true;
+	let moves = chess.moves();
+
+	if (chess.in_draw()) {
+		return [ 'DRAW', 0 ];
+	}
+
+	if (chess.in_checkmate()) {
+		return [ 'MATE', -turn * Infinity ];
+	}
+
+	eval = -Infinity;
+
+	scores = [];
+	if (depth >= 1) {
+		for (let i = 0; i < moves.length; i++) {
+			chess.move(moves[i]);
+			scores.push(
+				minimaxEngine(
+					chess.fen(),
+					depth - 1,
+				),
+			);
+
+			chess.undo();
+
+			for (
+				let i = 0;
+				i < scores.length;
+				i++
+			) {
+				if (
+					(maximizer &&
+						scores[i][1] ==
+							Infinity) ||
+					(!maximizer &&
+						scores[i][1] == -Infinity)
+				) {
+					return [
+						scores[i][0],
+						scores[i][1],
+					];
+				}
+			}
+		}
+		let bestMove;
+		let eval = maximizer
+			? -Infinity
+			: Infinity;
+		for (let i = 0; i < scores.length; i++) {
+			if (
+				(scores[i][1] > eval &&
+					maximizer) ||
+				(scores[i][1] < eval &&
+					!maximizer)
+			) {
+				eval = scores[i][1];
+				bestMove = scores[i][0];
+			}
+		}
+		print(bestMove, eval);
+		return [ bestMove, eval ];
+	} else {
+		for (let i = 0; i < moves.length; i++) {
+			chess.move(moves[i]);
+			scores.push([
+				moves[i],
+				evalPosition(chess.fen()),
+			]);
+
+			chess.undo();
+
+			for (
+				let i = 0;
+				i < scores.length;
+				i++
+			) {
+				if (
+					(maximizer &&
+						scores[i][1] ==
+							Infinity) ||
+					(!maximizer &&
+						scores[i][1] == -Infinity)
+				) {
+					break;
+				}
+			}
+
+			// if (
+			// 	(maximizer &&
+			// 		Math.max(...scores) ==
+			// 			Infinity) ||
+			// 	(!maximizer &&
+			// 		Math.min(...scores) ==
+			// 			-Infinity)
+			// ) {
+			// 	break;
+			// }
+		}
+		bestMove = 0;
+		eval = -100;
+
+		for (let i = 0; i < scores.length; i++) {
+			if (
+				(scores[i][1] > eval &&
+					maximizer) ||
+				(scores[i][1] < eval &&
+					!maximizer)
+			) {
+				eval = scores[i][1];
+				bestMove = scores[i][0];
+			}
+		}
+
+		return [ bestMove, eval ];
+	}
 }
 
 function onDrop (source, target){
@@ -73,7 +198,9 @@ function onDrop (source, target){
 
 	// make random legal move for black
 	window.setTimeout(() => {
-		game.move(randomEngine(game.fen()));
+		game.move(
+			minimaxEngine(game.fen(), 2)[0],
+		);
 	}, 0);
 }
 
