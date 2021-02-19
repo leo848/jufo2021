@@ -4,7 +4,7 @@
 var board = null;
 var game = new Chess();
 var gespeicherterZug = null;
-var gewuenschteTiefe = 3;
+var gewuenschteTiefe = 2;
 var print = console.log;
 var pfadbeginn = null;
 
@@ -35,7 +35,7 @@ function evalPosition (position, spieler){
 
 	if (chess.game_over()) {
 		if (chess.in_checkmate()) {
-			return -spieler * Infinity;
+			return spieler * Infinity;
 		}
 		if (chess.in_draw() || chess.in_stalemate()) {
 			return 0;

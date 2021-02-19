@@ -11,6 +11,8 @@ body {
 	min-height: 90vh;
 }
 
+
+
 #board {
 	position: absolute;
 	width: 400px;
@@ -19,38 +21,6 @@ body {
 	transform: translate(-50%, -50%);
 }
 
-#prog_eval {
-	display: block;
-	-webkit-appearance: none;
-	appearance: none;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-webkit-user-drag: auto;
-	transform: rotate(90deg) translate(-50%, -50%);
-
-	width: 200px;
-}
-
-progress[value]::-webkit-progress-bar {
-	background-color: #eee;
-	border-radius: 2px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25)
-		inset;
-}
-
-progress[value]::-webkit-progress-value {
-	background-image: -webkit-linear-gradient(
-			-45deg,
-			transparent 33%,
-			rgba(0, 0, 0, .1) 33%,
-			rgba(0, 0, 0, .1) 66%,
-			transparent 66%
-		),
-		-webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)),
-		-webkit-linear-gradient(left, #000, #000);
-
-	border-radius: 4px;
-	background-size: 35px 20px, 100% 100%,
-		100% 100%;
+button {
+	position: relative;
 }
