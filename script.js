@@ -123,7 +123,7 @@ function max (tiefe){
 
 function min (tiefe){
 	if (tiefe == 0 || game.moves().length == 0) {
-		return evalPosition(game.fen(), -1);
+		return evalPosition(game.fen(), 1);
 	}
 	var minWert = Infinity;
 	var zuege = game.moves();
