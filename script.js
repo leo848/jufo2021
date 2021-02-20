@@ -7,12 +7,11 @@ var gespeicherterZug = null;
 var gewuenschteTiefe = 2;
 var print = console.log;
 var pfadbeginn = null;
+var aktuelleSpielauswertung = 0;
 
-function onDragStart (source,	piece,position,	orientation){
-	// do not pick up pieces if the game is over
-	if (game.game_over()) return false;
-	// only pick up pieces for White
-	if (piece.search(/^b/) !== -1) return false;
+function onDragStart (source,	piece,position,	orientation){ // wenn ein Zug anfängt, dann...
+	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
+	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 }
 
 function changePlayer(fen) {
