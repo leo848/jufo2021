@@ -21,7 +21,7 @@ body {
 	width: 70vmin;
 	min-height: 300px;
 	min-width: 300px;
-
+	touch-action: none;
 	margin: 0 auto;
 }
 
