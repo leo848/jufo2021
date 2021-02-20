@@ -100,10 +100,9 @@ function evalPosition (position, spieler){
 function max (tiefe){
 	if (tiefe == 0 || game.moves().length == 0) {
 		if (tiefe == gewuenschteTiefe) {
-				gespeicherterZug = zuege[i];
-    }
-    return evalPosition(game.fen(), -1);
-    
+			gespeicherterZug = zuege[i];
+		}
+		return evalPosition(game.fen(), -1);
 	}
 	var maxWert = -Infinity;
 	var zuege = shuffleArray(game.moves());
@@ -164,7 +163,11 @@ function onDrop (source, target){
 		} else {
 			game.move(gespeicherterZug);
 		}
-	}, 0);
+		$('#bar').css(
+			'width',
+			aktuelleSpielauswertung * 10 + 100,
+		);
+	}, 10);
 }
 
 // update the board position after the piece snap
