@@ -9,6 +9,14 @@ var print = console.log;
 var pfadbeginn = null;
 var aktuelleSpielauswertung = 0;
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+  return array;
+}
+
 function onDragStart (source,	piece,position,	orientation){ // wenn ein Zug anfängt, dann...
 	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
@@ -58,7 +66,7 @@ function max(tiefe) {
     return evalPosition(game.fen(), -1);    
   }
   var maxWert = -Infinity;
-  var zuege = game.moves();
+  var zuege = shuffleArray(game.moves());
   for (let i = 0; i < zuege.length; i++) {
     //print("MAX(Tiefe="+tiefe+",i="+i + ","  + game.turn() + ")");    
     game.move(zuege[i]);
