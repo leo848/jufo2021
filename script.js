@@ -99,7 +99,11 @@ function evalPosition (position, spieler){
 
 function max (tiefe){
 	if (tiefe == 0 || game.moves().length == 0) {
-		return evalPosition(game.fen(), -1);
+		if (tiefe == gewuenschteTiefe) {
+				gespeicherterZug = zuege[i];
+    }
+    return evalPosition(game.fen(), -1);
+    
 	}
 	var maxWert = -Infinity;
 	var zuege = shuffleArray(game.moves());
