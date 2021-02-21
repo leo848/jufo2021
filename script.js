@@ -1,6 +1,3 @@
-// NOTE: this example uses the chess.js library:
-// https://github.com/jhlywa/chess.js
-
 var board = null;
 var game = new Chess();
 var gespeicherterZug = null;
@@ -70,7 +67,6 @@ function changePlayer (fen){
 function evalPosition (position, spieler){
 	let chess = new Chess(position);
 	let fen = chess.fen();
-	//let turn = chess.turn() == 'b' ? -1 : 1;
 
 	let eval = 0;
 
@@ -107,7 +103,6 @@ function max (tiefe){
 	var maxWert = -Infinity;
 	var zuege = shuffleArray(game.moves());
 	for (let i = 0; i < zuege.length; i++) {
-		//print("MAX(Tiefe="+tiefe+",i="+i + ","  + game.turn() + ")");
 		game.move(zuege[i]);
 		var wert = min(tiefe - 1);
 		game.undo();
@@ -128,7 +123,6 @@ function min (tiefe){
 	var minWert = Infinity;
 	var zuege = game.moves();
 	for (let i = 0; i < zuege.length; i++) {
-		//print("MIN(Tiefe="+tiefe+",i="+i + ","  + game.turn() + ")");
 		game.move(zuege[i]);
 		var wert = max(tiefe - 1);
 		game.undo();
@@ -145,7 +139,6 @@ function onDrop (source, target){
 		to        : target,
 		promotion : 'q',
 	});
-	// illegal move
 	if (move === null) return 'snapback';
 
 	if (game.game_over()) {
@@ -164,7 +157,7 @@ function onDrop (source, target){
 		}
 		$('#bar').css(
 			'width',
-			aktuelleSpielauswertung * 10 + 100,
+			-(aktuelleSpielauswertung * 10 + 100),
 		);
 	}, 10);
 }
