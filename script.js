@@ -6,6 +6,9 @@ var print = console.log; // für einfachere Ausgaben
 var pfadbeginn = null; // Pfad zum richtigen Zug
 var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
 
+$('#btn_remis').click(proposeDraw);
+$('#btn_resign').click(proposeResign);
+
 function shuffleArray (array){
 	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
 	for (let i = array.length - 1; i > 0; i--) {
@@ -32,15 +35,71 @@ function onDragStart (
 }
 
 function proposeDraw (){
-	if (aktuelleSpielauswertung > -0.3) {
-	}
+	Swal.fire({
+		title              :
+			'Möchtest Du Remis anbieten?',
+		text               :
+			'Falls das Remis angenommen wird, kannst du diese Partie nicht wiederherstellen.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			if (aktuelleSpielauswertung > 0.2) {
+				draw();
+			} else {
+				Swal.fire({
+					icon  : 'info',
+					title : 'Nicht akzeptiert',
+					text  :
+						'Dein Remisangebot wurde abgelehnt.',
+				});
+			}
+		}
+	});
 }
 
-function draw (){}
+function draw (){
+	Swal.fire({
+		icon  : 'warning',
+		title : '1/2-1/2',
+		text  : 'Es ist ein Unentschieden. :|',
+	});
+	newGame();
+}
 
-function newGame (){}
+function proposeResign (){
+	Swal.fire({
+		title              :
+			'Möchtest Du aufgeben?',
+		text               :
+			'Aufgeben muss immer die letzte Option sein.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire({
+				icon  : 'error',
+				title : '0-1',
+				text  :
+					'Du hast leider verloren. :(',
+			});
+			newGame();
+		}
+	});
+}
 
-function draw (){}
+function newGame (){
+	game = new Chess();
+	board.position(game);
+}
 
 function changePlayer (fen){
 	// Wechsle den Spieler.
@@ -220,10 +279,10 @@ function onDrop (source, target){
 		$('#bar').css(
 			// zeige den aktuellen Spielstand in einer Leiste über dem Brett
 			'width',
-			-(
-				aktuelleSpielauswertung * 10 +
-				100
-			) + 200,
+			(aktuelleSpielauswertung + 10) /
+				20 *
+				100 +
+				'%',
 		);
 	}, 10);
 }
