@@ -8,8 +8,13 @@
 }
 
 body {
-	min-height: 90vh;
-	background-color: #232323;
+	min-height: 100vh;
+	background: linear-gradient(
+		144deg,
+		rgba(18, 18, 18, 1) 0%,
+		rgba(65, 65, 65, 1) 100%
+	);
+	overflow: hidden;
 }
 
 #container {
@@ -24,6 +29,7 @@ body {
 	min-width: 300px;
 	touch-action: none;
 	margin: 0 auto;
+	filter: grayscale(100%) invert(10%);
 }
 
 #timer {
@@ -50,4 +56,10 @@ body {
 
 button {
 	position: relative;
+	background-color: #323232;
+	border-radius: 10px;
+	border: 2px solid white;
+	color: white;
+	padding: 5px;
+	margin: 5px;
 }
