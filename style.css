@@ -26,50 +26,6 @@ body {
 	-o-animation: linanim 24s ease infinite;
 	animation: linanim 24s ease infinite;
 }
-@-webkit-keyframes linanim {
-	0% {
-		background-position: 7% 0%;
-	}
-	50% {
-		background-position: 94% 100%;
-	}
-	100% {
-		background-position: 7% 0%;
-	}
-}
-@-moz-keyframes linanim {
-	0% {
-		background-position: 7% 0%;
-	}
-	50% {
-		background-position: 94% 100%;
-	}
-	100% {
-		background-position: 7% 0%;
-	}
-}
-@-o-keyframes linanim {
-	0% {
-		background-position: 7% 0%;
-	}
-	50% {
-		background-position: 94% 100%;
-	}
-	100% {
-		background-position: 7% 0%;
-	}
-}
-@keyframes linanim {
-	0% {
-		background-position: 7% 0%;
-	}
-	50% {
-		background-position: 94% 100%;
-	}
-	100% {
-		background-position: 7% 0%;
-	}
-}
 #container {
 	text-align: center;
 }
