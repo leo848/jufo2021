@@ -111,7 +111,7 @@ function max (tiefe){
 		game.move(zuege[i]);
 		var wert = min(tiefe - 1);
 		game.undo();
-		if (wert > maxWert) {
+		if (wert >= maxWert) {
 			if (tiefe == gewuenschteTiefe) {
 				gespeicherterZug = zuege[i];
 			}
@@ -132,7 +132,7 @@ function min (tiefe){
 		game.move(zuege[i]);
 		var wert = max(tiefe - 1);
 		game.undo();
-		if (wert < minWert) {
+		if (wert <= minWert) {
 			minWert = wert;
 		}
 	}
