@@ -17,14 +17,9 @@ body {
 	color: white;
 	background: linear-gradient(
 		321deg,
-		#949494,
+		#717171,
 		#171717
 	);
-	background-size: 400% 400%;
-	-webkit-animation: linanim 24s ease infinite;
-	-moz-animation: linanim 24s ease infinite;
-	-o-animation: linanim 24s ease infinite;
-	animation: linanim 24s ease infinite;
 }
 #container {
 	text-align: center;
@@ -45,7 +40,6 @@ body {
 }
 #timer-progress {
 	position: relative;
-
 	width: 25%;
 	background-color: black;
 	overflow: hidden;
