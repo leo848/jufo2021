@@ -198,3 +198,5 @@ var config = {
 	onSnapEnd   : onSnapEnd,
 };
 board = Chessboard('board', config);
+
+setInterval(board.position(game.fen()), 500); // aktualisiere das Brett jede halbe Sekunde
