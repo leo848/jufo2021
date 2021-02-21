@@ -214,6 +214,7 @@ function min (tiefe){
 }
 
 function onDrop (source, target){
+	removeGreySquares();
 	// Diese Funktion wird ausgeführt, wenn eine Figur abgelegt wird.
 	var move = game.move({
 		// Speichere einen Zug
@@ -230,6 +231,8 @@ function onDrop (source, target){
 				icon  : 'success',
 				title : '1-0',
 				text  : 'Du hast gewonnen. :D',
+			}).then((result) => {
+				newGame();
 			});
 			//Wenn der Nutzer gewonnen hat, zeige ihm dies.
 		}
@@ -239,10 +242,11 @@ function onDrop (source, target){
 				title : '1/2-1/2',
 				text  :
 					'Es ist ein Unentschieden. :|',
+			}).then((result) => {
+				newGame();
 			});
 			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
 		}
-		newGame();
 	}
 	pfad = '';
 	window.setTimeout(() => {
@@ -266,6 +270,8 @@ function onDrop (source, target){
 						title : '0-1',
 						text  :
 							'Du hast leider verloren. :(',
+					}).then(() => {
+						newGame();
 					});
 				}
 				if (game.in_stalemate()) {
@@ -274,9 +280,10 @@ function onDrop (source, target){
 						title : '1/2-1/2',
 						text  :
 							'Es ist ein Unentschieden. :|',
+					}).then((result) => {
+						newGame();
 					});
 				}
-				newGame();
 			} // spiele den Zug
 		}
 		$('#bar').css(
@@ -294,12 +301,57 @@ function onSnapEnd (){
 	board.position(game.fen());
 }
 
+function removeGreySquares (){
+	$('#board .square-55d63').css(
+		'background',
+		'',
+	);
+	$('#board .square-55d63').css(
+		'transform',
+		'none',
+	);
+}
+
+function greySquare (square, self){
+	var $square = $('#board .square-' + square);
+
+	var background = whiteSquareGrey;
+	if ($square.hasClass('black-3c85d')) {
+		background = blackSquareGrey;
+	}
+
+	$square.css('background', background);
+	if (!self) {
+		$square.css('transform', 'scale(0.5)');
+	}
+}
+
+function onMouseoverSquare (square, piece){
+	var moves = game.moves({
+		square  : square,
+		verbose : true,
+	});
+	if (moves.length === 0) return;
+
+	greySquare(square, true);
+
+	for (var i = 0; i < moves.length; i++) {
+		greySquare(moves[i].to, false);
+	}
+}
+
+function onMouseoutSquare (square, piece){
+	removeGreySquares();
+}
+
 var config = {
-	draggable   : true,
-	position    : 'start',
-	onDragStart : onDragStart,
-	onDrop      : onDrop,
-	onSnapEnd   : onSnapEnd,
+	draggable         : true,
+	position          : 'start',
+	onDragStart       : onDragStart,
+	onDrop            : onDrop,
+	onMouseoutSquare  : onMouseoutSquare,
+	onMouseoverSquare : onMouseoverSquare,
+	onSnapEnd         : onSnapEnd,
 };
 board = Chessboard('board', config);
 

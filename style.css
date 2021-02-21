@@ -5,6 +5,8 @@
 		BlinkMacSystemFont, 'Segoe UI', Roboto,
 		Oxygen, Ubuntu, Cantarell, 'Open Sans',
 		'Helvetica Neue', sans-serif;
+	margin: 0;
+	padding: 0;
 }
 
 #twobar {
@@ -52,19 +54,23 @@ body {
 	width: 100%;
 	height: 10px;
 	background-color: white;
-	transition: 0.5s;
+	transition: 2s;
 }
-button {
+button,
+select.drpd_oncl {
 	position: relative;
 	background-color: #323232;
 	border-radius: 10px;
 	border: 2px solid white;
 	color: white;
-	padding: 5px;
+	padding: 8px;
 	margin: 5px;
+	transition: .99s;
+	transform: none;
+	font-size: 1.2em;
 }
-button:hover {
+button.btn_oncl:hover {
 	background-color: white;
 	color: black;
-	font-weight: bold;
+	transform: rotateX(30deg);
 }

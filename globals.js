@@ -1,3 +1,6 @@
+const whiteSquareGrey = '#494949';
+const blackSquareGrey = '#494949';
+
 const PIECE_VALUES = {
 	p : 1,
 	n : 3.2,
