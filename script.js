@@ -31,6 +31,17 @@ function onDragStart (
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 }
 
+function proposeDraw (){
+	if (aktuelleSpielauswertung > -0.3) {
+	}
+}
+
+function draw (){}
+
+function newGame (){}
+
+function draw (){}
+
 function changePlayer (fen){
 	// Wechsle den Spieler.
 	parts = fen.split(' ');
@@ -165,6 +176,9 @@ function onDrop (source, target){
 	}
 	pfad = '';
 	window.setTimeout(() => {
+		$('#title').html(
+			'Computer denkt nach...',
+		);
 		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
 		aktuelleSpielauswertung = bewertung;
 		print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
@@ -173,7 +187,26 @@ function onDrop (source, target){
 			// wenn kein Zug verfügbar ist:
 			print('Kein gültiger Zug'); // gib dies aus
 		} else {
-			game.move(gespeicherterZug); // spiele den Zug
+			game.move(gespeicherterZug);
+			$('#title').html('Du bist dran!');
+			if (game.game_over()) {
+				if (game.in_checkmate()) {
+					Swal.fire({
+						icon  : 'error',
+						title : '0-1',
+						text  :
+							'Du hast leider verloren. :(',
+					});
+				}
+				if (game.in_stalemate()) {
+					Swal.fire({
+						icon  : 'warning',
+						title : '1/2-1/2',
+						text  :
+							'Es ist ein Unentschieden. :|',
+					});
+				}
+			} // spiele den Zug
 		}
 		$('#bar').css(
 			// zeige den aktuellen Spielstand in einer Leiste über dem Brett
