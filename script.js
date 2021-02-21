@@ -166,11 +166,20 @@ function onDrop (source, target){
 
 	if (game.game_over()) {
 		if (game.in_checkmate()) {
-			alert('Du hast gewonnen!');
+			Swal.fire({
+				icon  : 'success',
+				title : '1-0',
+				text  : 'Du hast gewonnen. :D',
+			});
 			//Wenn der Nutzer gewonnen hat, zeige ihm dies.
 		}
 		if (game.in_draw()) {
-			alert('Es ist ein Unentschieden.');
+			Swal.fire({
+				icon  : 'warning',
+				title : '1/2-1/2',
+				text  :
+					'Es ist ein Unentschieden. :|',
+			});
 			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
 		}
 	}

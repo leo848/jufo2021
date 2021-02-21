@@ -7,14 +7,19 @@
 		'Helvetica Neue', sans-serif;
 }
 
+#twobar {
+	color: gray;
+}
+
 body {
 	min-height: 100vh;
 	background: linear-gradient(
 		144deg,
 		rgba(18, 18, 18, 1) 0%,
-		rgba(65, 65, 65, 1) 100%
+		rgba(131, 131, 131, 1) 100%
 	);
 	overflow: hidden;
+	color: white;
 }
 
 #container {
