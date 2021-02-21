@@ -48,7 +48,7 @@ function proposeDraw (){
 		cancelButtonText   : 'Nein',
 	}).then((result) => {
 		if (result.isConfirmed) {
-			if (aktuelleSpielauswertung > 0.2) {
+			if (aktuelleSpielauswertung < -0.2) {
 				draw();
 			} else {
 				Swal.fire({
@@ -279,7 +279,7 @@ function onDrop (source, target){
 		$('#bar').css(
 			// zeige den aktuellen Spielstand in einer Leiste über dem Brett
 			'width',
-			(aktuelleSpielauswertung + 10) /
+			(-aktuelleSpielauswertung + 10) /
 				20 *
 				100 +
 				'%',
