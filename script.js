@@ -140,11 +140,10 @@ function min (tiefe){
 }
 
 function onDrop (source, target){
-	// see if the move is legal
 	var move = game.move({
 		from      : source,
 		to        : target,
-		promotion : 'q', // NOTE: always promote to a queen for example simplicity
+		promotion : 'q',
 	});
 	// illegal move
 	if (move === null) return 'snapback';
@@ -170,8 +169,7 @@ function onDrop (source, target){
 	}, 10);
 }
 
-// update the board position after the piece snap
-// for castling, en passant, pawn promotion
+
 function onSnapEnd (){
 	board.position(game.fen());
 }
