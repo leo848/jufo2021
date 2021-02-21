@@ -242,6 +242,7 @@ function onDrop (source, target){
 			});
 			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
 		}
+		newGame();
 	}
 	pfad = '';
 	window.setTimeout(() => {
@@ -275,6 +276,7 @@ function onDrop (source, target){
 							'Es ist ein Unentschieden. :|',
 					});
 				}
+				newGame();
 			} // spiele den Zug
 		}
 		$('#bar').css(
