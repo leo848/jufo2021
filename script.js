@@ -6,7 +6,7 @@ var print = console.log;
 var pfadbeginn = null;
 var aktuelleSpielauswertung = 0;
 
-function shuffleArray (array){
+function shuffleArray (array){ // Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = Math.floor(
 			Math.random() * (i + 1),
@@ -30,7 +30,8 @@ function onDragStart (
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 }
 
-function changePlayer (fen){
+function changePlayer(fen) {
+  // Wechsle den Spieler.
 	parts = fen.split(' ');
 	player = parts[1];
 	if (player == 'w') {
@@ -64,7 +65,8 @@ function changePlayer (fen){
 	}
 }
 
-function evalPosition (position, spieler){
+function evalPosition(position, spieler) {
+  // Evaluiere eine Stellung und gib den berechneten Wert wieder.
 	let chess = new Chess(position);
 	let fen = chess.fen();
 
@@ -93,8 +95,10 @@ function evalPosition (position, spieler){
 	return eval;
 }
 
-function max (tiefe){
-	if (tiefe == 0 || game.moves().length == 0) {
+function max(tiefe) {
+  //Maximiert die aktuelle Stellung mithilfe einer Tiefe.
+  if (tiefe == 0 || game.moves().length == 0) {
+    //Wenn die Tiefe null ist oder keine Züge möglich sind, gib die aktuelle Stellung zurück.
 		if (tiefe == gewuenschteTiefe) {
 			gespeicherterZug = zuege[i];
 		}
@@ -102,21 +106,25 @@ function max (tiefe){
 	}
 	var maxWert = -Infinity;
 	var zuege = shuffleArray(game.moves());
-	for (let i = 0; i < zuege.length; i++) {
-		game.move(zuege[i]);
-		var wert = min(tiefe - 1);
-		game.undo();
-		if (wert >= maxWert) {
-			if (tiefe == gewuenschteTiefe) {
+  for (let i = 0; i < zuege.length; i++) {
+    // sonst wird für jeden Zug ausgeführt:
+		game.move(zuege[i]); // ziehe den Zug
+		var wert = min(tiefe - 1); // berechne den Wert dessen mit der min-Funktoon
+		game.undo(); // nehme den Zug zurück
+    if (wert >= maxWert) {
+      //wenn der Zug besser als der bisher beste war:
+      if (tiefe == gewuenschteTiefe) {
+        // speichere den Zug, falls die Tiefe so gewünscht ist
 				gespeicherterZug = zuege[i];
 			}
-			maxWert = wert;
+			maxWert = wert; // stelle die beste Bewertung auf die aktuelle
 		}
 	}
-	return maxWert;
+	return maxWert; //gib die beste Bewertung zurück
 }
 
-function min (tiefe){
+function min(tiefe) {
+  // im Prinzip genau gleich wie die max-Funktion, nur mit Minimierung statt Maximierung
 	if (tiefe == 0 || game.moves().length == 0) {
 		return evalPosition(game.fen(), 1);
 	}
@@ -134,28 +142,37 @@ function min (tiefe){
 }
 
 function onDrop (source, target){
-	var move = game.move({
+  // Diese Funktion wird ausgeführt, wenn eine Figur abgelegt wird.
+	var move = game.move({ // Speichere einen Zug
 		from      : source,
 		to        : target,
 		promotion : 'q',
 	});
-	if (move === null) return 'snapback';
+  if (move === null) return 'snapback';
+  // Wenn der Zug ungültig ist,nehme ihn zurück
 
-	if (game.game_over()) {
-		alert('Du hast gewonnen!');
+  if (game.game_over()) {
+    if (game.in_checkmate()) {
+      alert('Du hast gewonnen!');
+      //Wenn der Nutzer gewonnen hat, zeige ihm dies.
+    }
+		if (game.in_draw()) {
+      alert('Es ist ein Unentschieden.');
+      //Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
+    }
 	}
 	pfad = '';
 	window.setTimeout(() => {
-		bewertung = max(gewuenschteTiefe);
+		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
 		aktuelleSpielauswertung = bewertung;
-		print('Zug: ' + gespeicherterZug);
-		print('Am Zug:' + game.turn());
-		if (gespeicherterZug == null) {
-			print('Kein gültiger Zug');
+		print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
+		print('Am Zug:' + game.turn()); //gib aus, wer dran ist
+		if (gespeicherterZug == null) { // wenn kein Zug verfügbar ist:
+			print('Kein gültiger Zug'); // gib dies aus
 		} else {
-			game.move(gespeicherterZug);
+			game.move(gespeicherterZug); // spiele den Zug
 		}
-		$('#bar').css(
+		$('#bar').css( // zeige den aktuellen Spielstand in einer Leiste über dem Brett
 			'width',
 			-(aktuelleSpielauswertung * 10 + 100),
 		);
