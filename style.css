@@ -72,5 +72,5 @@ select.drpd_oncl {
 button.btn_oncl:hover {
 	background-color: white;
 	color: black;
-	transform: rotateX(30deg);
+	transform: scale(0.93);
 }

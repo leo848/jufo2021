@@ -220,7 +220,9 @@ function onDrop (source, target){
 		// Speichere einen Zug
 		from      : source,
 		to        : target,
-		promotion : 'q',
+		promotion : $(
+			'#drpd_figure option:selected',
+		).val(),
 	});
 	if (move === null) return 'snapback';
 	// Wenn der Zug ungültig ist,nehme ihn zurück
@@ -230,7 +232,7 @@ function onDrop (source, target){
 			Swal.fire({
 				icon  : 'success',
 				title : '1-0',
-				text  : 'Du hast gewonnen. :D',
+				text  : 'Du hast gewonnen. :)',
 			}).then((result) => {
 				newGame();
 			});
