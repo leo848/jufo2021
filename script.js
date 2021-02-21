@@ -67,8 +67,9 @@ function draw (){
 		icon  : 'warning',
 		title : '1/2-1/2',
 		text  : 'Es ist ein Unentschieden. :|',
+	}).then((result) => {
+		newGame();
 	});
-	newGame();
 }
 
 function proposeResign (){
@@ -98,7 +99,7 @@ function proposeResign (){
 
 function newGame (){
 	game = new Chess();
-	board.position(game);
+	board = Chessboard('board', config);
 }
 
 function changePlayer (fen){

@@ -13,19 +13,66 @@
 
 body {
 	min-height: 100vh;
-	background: linear-gradient(
-		144deg,
-		rgba(18, 18, 18, 1) 0%,
-		rgba(131, 131, 131, 1) 100%
-	);
 	overflow: hidden;
 	color: white;
+	background: linear-gradient(
+		321deg,
+		#949494,
+		#171717
+	);
+	background-size: 400% 400%;
+	-webkit-animation: linanim 24s ease infinite;
+	-moz-animation: linanim 24s ease infinite;
+	-o-animation: linanim 24s ease infinite;
+	animation: linanim 24s ease infinite;
 }
-
+@-webkit-keyframes linanim {
+	0% {
+		background-position: 7% 0%;
+	}
+	50% {
+		background-position: 94% 100%;
+	}
+	100% {
+		background-position: 7% 0%;
+	}
+}
+@-moz-keyframes linanim {
+	0% {
+		background-position: 7% 0%;
+	}
+	50% {
+		background-position: 94% 100%;
+	}
+	100% {
+		background-position: 7% 0%;
+	}
+}
+@-o-keyframes linanim {
+	0% {
+		background-position: 7% 0%;
+	}
+	50% {
+		background-position: 94% 100%;
+	}
+	100% {
+		background-position: 7% 0%;
+	}
+}
+@keyframes linanim {
+	0% {
+		background-position: 7% 0%;
+	}
+	50% {
+		background-position: 94% 100%;
+	}
+	100% {
+		background-position: 7% 0%;
+	}
+}
 #container {
 	text-align: center;
 }
-
 #board {
 	position: relative;
 	height: 70vmin;
@@ -34,15 +81,15 @@ body {
 	min-width: 300px;
 	touch-action: none;
 	margin: 0 auto;
-	filter: grayscale(100%) invert(10%);
+	filter: invert(10%) contrast(200%)
+		brightness(80%);
 }
-
 #timer {
 	font-size: 50px;
 }
-
 #timer-progress {
 	position: relative;
+
 	width: 25%;
 	background-color: black;
 	overflow: hidden;
@@ -50,7 +97,6 @@ body {
 	border-radius: 50px;
 	margin: 10px auto;
 }
-
 #bar {
 	position: relative;
 	width: 100%;
@@ -58,7 +104,6 @@ body {
 	background-color: white;
 	transition: 0.5s;
 }
-
 button {
 	position: relative;
 	background-color: #323232;
@@ -68,7 +113,6 @@ button {
 	padding: 5px;
 	margin: 5px;
 }
-
 button:hover {
 	background-color: white;
 	color: black;
