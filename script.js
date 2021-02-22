@@ -8,16 +8,94 @@ var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
 var hintergrundDrehung = 0;
 var spiel = [];
 
+var reducedAnimations = false; // Animationen deaktivieren
+var showLegalMoves = true; // legale Züge anzeigen
+var betterSpeed = true; // schnellere Geschwindigkeit (für Geräte mit schlechter Leistung nicht empfohlen)
+var shuffleMoves = true; // Züge werden für mehr Varianten durchgemischt
+
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
 
+$('#options_container').hover(
+	// Einstellungen zeigen und ausblenden.
+	() => {
+		$('#options').css('opacity', '1');
+	},
+	() => {
+		setTimeout(() => {
+			$('#options:not(:hover)').css(
+				'opacity',
+				0,
+			);
+		}, 930);
+	},
+);
+
+$('#cbx_redanim').click(() => {
+	reducedAnimations = !reducedAnimations;
+	if (!reducedAnimations) {
+		$(
+			'#option_container,#bar,ul#options',
+		).css('transition', '2s');
+		$('button,select').css(
+			'transition',
+			'.93s',
+		);
+		$('#board *').css('transition', '.5s');
+	} else {
+		$(
+			'#option_container,#bar,ul#options',
+		).css('transition', 'none');
+		$('button,select').css(
+			'transition',
+			'none',
+		);
+		$('#board *').css('transition', 'none');
+	}
+});
+$('#cbx_showlegals').click(() => {
+	showLegalMoves = !showLegalMoves;
+	removeGreySquares();
+
+	if (showLegalMoves) {
+		greySquare = function (square, self){
+			var $square = $(
+				'#board .square-' + square,
+			);
+
+			var background = whiteSquareGrey;
+			if ($square.hasClass('black-3c85d')) {
+				background = blackSquareGrey;
+			}
+
+			$square.css('background', background);
+			if (!self) {
+				$square.css(
+					'transform',
+					'scale(0.5)',
+				);
+			}
+		};
+	} else {
+		greySquare = function (){};
+	}
+});
+$('#cbx_btspeed').click(() => {
+	betterSpeed = !betterSpeed;
+});
+$('#cbx_shuffle').click(() => {
+	shuffleMoves = !shuffleMoves;
+});
+
 setInterval(() => {
-	$(document.body).css(
-		'background',
-		`linear-gradient(${hintergrundDrehung %
-			360}deg,#707070,#070717)`,
-	);
-	hintergrundDrehung++;
+	if (!reducedAnimations) {
+		$(document.body).css(
+			'background',
+			`linear-gradient(${hintergrundDrehung %
+				360}deg,#707070,#070717)`,
+		);
+		hintergrundDrehung++;
+	}
 }, 200);
 
 function shuffleArray (array){
@@ -127,7 +205,7 @@ function proposeResign (){
 	});
 }
 
-function newGame (result){
+function newGame (rresult){
 	Swal.fire({
 		title              : 'Speichern?',
 		text               :
@@ -161,7 +239,7 @@ function newGame (result){
 				`\
 			[White "Nutzer"]
 			[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
-			[Result "${RESULTS[result]}"]
+			[Result "${RESULTS[rresult]}"]
 			[Variant "Standard"]
 			[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() +
 					1).toString().length == 1
@@ -257,7 +335,9 @@ function max (tiefe){
 		return evalPosition(game.fen(), -1);
 	}
 	var maxWert = -Infinity;
-	var zuege = shuffleArray(game.moves());
+	var zuege = shuffleMoves
+		? shuffleArray(game.moves())
+		: game.moves();
 	for (let i = 0; i < zuege.length; i++) {
 		// sonst wird für jeden Zug ausgeführt:
 		game.move(zuege[i]); // ziehe den Zug
@@ -281,7 +361,9 @@ function min (tiefe){
 		return evalPosition(game.fen(), 1);
 	}
 	var minWert = Infinity;
-	var zuege = game.moves();
+	var zuege = shuffleMoves
+		? shuffleArray(game.moves())
+		: game.moves();
 	for (let i = 0; i < zuege.length; i++) {
 		game.move(zuege[i]);
 		var wert = max(tiefe - 1);
@@ -312,8 +394,8 @@ function onDrop (source, target){
 		if (game.in_checkmate()) {
 			Swal.fire({
 				icon  : 'success',
-				title : '1-0',
-				text  : 'Du hast gewonnen. :)',
+				title : '1-0 👍',
+				text  : 'Du hast gewonnen.',
 			}).then((result) => {
 				newGame(2);
 			});
@@ -322,7 +404,7 @@ function onDrop (source, target){
 		if (game.in_draw()) {
 			Swal.fire({
 				icon  : 'warning',
-				title : '1/2-1/2',
+				title : '1/2-1/2 👌',
 				text  :
 					'Es ist ein Unentschieden. :|',
 			}).then((result) => {
@@ -357,7 +439,7 @@ function onDrop (source, target){
 			if (game.in_checkmate()) {
 				Swal.fire({
 					icon  : 'error',
-					title : '0-1',
+					title : '0-1 👎',
 					text  :
 						'Du hast leider verloren. :(',
 				}).then(() => {
@@ -367,7 +449,7 @@ function onDrop (source, target){
 			if (game.in_stalemate()) {
 				Swal.fire({
 					icon  : 'warning',
-					title : '1/2-1/2',
+					title : '1/2-1/2 👌',
 					text  :
 						'Es ist ein Unentschieden. :|',
 				}).then((result) => {
