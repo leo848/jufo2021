@@ -130,12 +130,12 @@ function newGame (){
 				i += 2
 			) {
 				spiel[i] =
-					(i) / 2 + '. ' + spiel[i];
+					(i + 2) / 2 + '. ' + spiel[i] + " ";
 				try {
 					spiel[i + 1] = spiel[i + 1] + "\n";
 				} catch {}
 			}
-			print(spiel);
+			print(spiel.join(""));
 		}
 	});
 	game = new Chess();
