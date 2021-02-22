@@ -255,6 +255,11 @@ function onDrop (source, target){
 		$('#title').html(
 			'Computer denkt nach...',
 		);
+		$("link[rel*='icon']").prop(
+			'href',
+			'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
+		);
+
 		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
 		aktuelleSpielauswertung = bewertung;
 		print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
@@ -265,6 +270,10 @@ function onDrop (source, target){
 		} else {
 			game.move(gespeicherterZug);
 			$('#title').html('Du bist dran!');
+			$('#favicon').prop(
+				'href',
+				'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
+			);
 			if (game.game_over()) {
 				if (game.in_checkmate()) {
 					Swal.fire({
