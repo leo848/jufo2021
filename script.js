@@ -124,6 +124,18 @@ function newGame (){
 	}).then((result) => {
 		if (result.isConfirmed) {
 			print(spiel);
+			for (
+				let i = 0;
+				i < spiel.length;
+				i += 2
+			) {
+				spiel[i] =
+					(i) / 2 + '. ' + spiel[i];
+				try {
+					spiel[i + 1] = spiel[i + 1] + "\n";
+				} catch {}
+			}
+			print(spiel);
 		}
 	});
 	game = new Chess();
