@@ -97,7 +97,7 @@ function draw (){
 		title : '1/2-1/2',
 		text  : 'Es ist ein Unentschieden. :|',
 	}).then((result) => {
-		newGame();
+		newGame(1);
 	});
 }
 
@@ -122,12 +122,12 @@ function proposeResign (){
 				text  :
 					'Du hast leider verloren. :(',
 			});
-			newGame();
+			newGame(0);
 		}
 	});
 }
 
-function newGame (){
+function newGame (result){
 	Swal.fire({
 		title              : 'Speichern?',
 		text               :
@@ -145,6 +145,7 @@ function newGame (){
 				i < spiel.length;
 				i += 2
 			) {
+				if (spiel[i] || false) break;
 				spiel[i] =
 					(i + 2) / 2 +
 					'. ' +
@@ -155,6 +156,20 @@ function newGame (){
 						spiel[i + 1] + '\n';
 				} catch (e) {}
 			}
+			d = new Date();
+			jointpgn = `\
+			[White "Nutzer"]
+			[Black "MinimaxBot Stufe ${gewuenschteTiefe}]
+			[Result ${RESULTS[result]}]
+			[Variant "Standard"]
+			[Date "${d.getUTCFullYear()}.${len(
+				(d.getUTCMonth() + 1).toString(),
+			) == 1
+				? '0' + d.getUTCMonth() + 1
+				: d.getUTCMonth() + 1}"]
+			[Time "${d.toUTCString().split(' ')[4]}"]\
+			`;
+
 			print(spiel.join(''));
 			download('game.pgn', spiel.join(''));
 			spiel = [];
@@ -300,7 +315,7 @@ function onDrop (source, target){
 				title : '1-0',
 				text  : 'Du hast gewonnen. :)',
 			}).then((result) => {
-				newGame();
+				newGame(2);
 			});
 			//Wenn der Nutzer gewonnen hat, zeige ihm dies.
 		}
@@ -311,7 +326,7 @@ function onDrop (source, target){
 				text  :
 					'Es ist ein Unentschieden. :|',
 			}).then((result) => {
-				newGame();
+				newGame(1);
 			});
 			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
 		}
@@ -346,7 +361,7 @@ function onDrop (source, target){
 					text  :
 						'Du hast leider verloren. :(',
 				}).then(() => {
-					newGame();
+					newGame(0);
 				});
 			}
 			if (game.in_stalemate()) {
@@ -356,7 +371,7 @@ function onDrop (source, target){
 					text  :
 						'Es ist ein Unentschieden. :|',
 				}).then((result) => {
-					newGame();
+					newGame(1);
 				});
 			}
 		} // spiele den Zug

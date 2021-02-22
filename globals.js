@@ -14,4 +14,10 @@ const PIECE_VALUES = {
 	R : -5.1,
 	Q : -8.8,
 	K : 0,
-}; // based on Hans Berliner's system.
+}; // basierend auf dem System von Hans Berliner
+
+const RESULTS = [
+	"0-1",
+	"1/2-1/2",
+	"1-0"
+]
