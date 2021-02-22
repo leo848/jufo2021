@@ -6,6 +6,7 @@ var print = console.log; // für einfachere Ausgaben
 var pfadbeginn = null; // Pfad zum richtigen Zug
 var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
 var hintergrundDrehung = 0;
+var spiel = [];
 
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
@@ -122,7 +123,7 @@ function newGame (){
 		cancelButtonText   : 'Nein',
 	}).then((result) => {
 		if (result.isConfirmed) {
-			print(game.pgn());
+			print(spiel);
 		}
 	});
 	game = new Chess();
@@ -253,6 +254,7 @@ function onDrop (source, target){
 	});
 	if (move === null) return 'snapback';
 	// Wenn der Zug ungültig ist,nehme ihn zurück
+	spiel.push(move.san);
 
 	if (game.game_over()) {
 		if (game.in_checkmate()) {
@@ -292,7 +294,8 @@ function onDrop (source, target){
 		// wenn kein Zug verfügbar ist:
 		print('Kein gültiger Zug'); // gib dies aus
 	} else {
-		game.move(gespeicherterZug);
+		let zug = game.move(gespeicherterZug);
+		spiel.push(zug.san);
 		$('#title').html('Du bist dran!');
 		$('#favicon').prop(
 			'href',
