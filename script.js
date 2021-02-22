@@ -34,17 +34,21 @@ function shuffleArray (array){
 	return array;
 }
 
-function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
+function download (filename, text){
+	var element = document.createElement('a');
+	element.setAttribute(
+		'href',
+		'data:text/plain;charset=utf-8,' +
+			encodeURIComponent(text),
+	);
+	element.setAttribute('download', filename);
 
-  element.style.display = 'none';
-  document.body.appendChild(element);
+	element.style.display = 'none';
+	document.body.appendChild(element);
 
-  element.click();
+	element.click();
 
-  document.body.removeChild(element);
+	document.body.removeChild(element);
 }
 
 function onDragStart (
@@ -142,16 +146,23 @@ function newGame (){
 				i += 2
 			) {
 				spiel[i] =
-					(i + 2) / 2 + '. ' + spiel[i] + " ";
+					(i + 2) / 2 +
+					'. ' +
+					spiel[i] +
+					' ';
 				try {
-					spiel[i + 1] = spiel[i + 1] + "\n";
-				} catch {}
+					spiel[i + 1] =
+						spiel[i + 1] + '\n';
+				} catch (e) {}
 			}
-			print(spiel.join(""))
-			download("game.pgn", spiel.join(""));
+			print(spiel.join(''));
+			download('game.pgn', spiel.join(''));
+			spiel = [];
+		} else {
+			spiel = [];
 		}
 	});
-	spiel = [];
+
 	game = new Chess();
 	board = Chessboard('board', config);
 }
