@@ -145,29 +145,30 @@ function newGame (result){
 				i < spiel.length;
 				i += 2
 			) {
-				if (spiel[i] || false) break;
 				spiel[i] =
 					(i + 2) / 2 +
 					'. ' +
 					spiel[i] +
 					' ';
-				try {
+				if (spiel[i] !== undefined) {
 					spiel[i + 1] =
 						spiel[i + 1] + '\n';
-				} catch (e) {}
+				}
 			}
+			print(spiel);
 			d = new Date();
-			jointpgn = `\
+			jointpgn =
+				`\
 			[White "Nutzer"]
-			[Black "MinimaxBot Stufe ${gewuenschteTiefe}]
-			[Result ${RESULTS[result]}]
+			[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
+			[Result "${RESULTS[result]}"]
 			[Variant "Standard"]
 			[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() +
-				1).toString().length == 1
-				? '0' + d.getUTCMonth() + 1
-				: d.getUTCMonth() + 1}"]
-			[Time "${d.toUTCString().split(' ')[4]}"]\
-			`;
+					1).toString().length == 1
+					? '0' + (d.getUTCMonth() + 1)
+					: d.getUTCMonth() + 1}"]
+			[Time "${d.toUTCString().split(' ')[4]}"]
+			` + spiel.join('');
 
 			print(jointpgn);
 			download('game.pgn', jointpgn);
