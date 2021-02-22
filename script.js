@@ -162,9 +162,8 @@ function newGame (result){
 			[Black "MinimaxBot Stufe ${gewuenschteTiefe}]
 			[Result ${RESULTS[result]}]
 			[Variant "Standard"]
-			[Date "${d.getUTCFullYear()}.${len(
-				(d.getUTCMonth() + 1).toString(),
-			) == 1
+			[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() +
+				1).toString().length == 1
 				? '0' + d.getUTCMonth() + 1
 				: d.getUTCMonth() + 1}"]
 			[Time "${d.toUTCString().split(' ')[4]}"]\
