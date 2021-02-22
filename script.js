@@ -147,9 +147,11 @@ function newGame (){
 					spiel[i + 1] = spiel[i + 1] + "\n";
 				} catch {}
 			}
+			print(spiel.join(""))
 			download("game.pgn", spiel.join(""));
 		}
 	});
+	spiel = [];
 	game = new Chess();
 	board = Chessboard('board', config);
 }
