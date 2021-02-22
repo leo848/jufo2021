@@ -34,6 +34,19 @@ function shuffleArray (array){
 	return array;
 }
 
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 function onDragStart (
 	source,
 	piece,
@@ -123,7 +136,6 @@ function newGame (){
 		cancelButtonText   : 'Nein',
 	}).then((result) => {
 		if (result.isConfirmed) {
-			print(spiel);
 			for (
 				let i = 0;
 				i < spiel.length;
@@ -135,7 +147,7 @@ function newGame (){
 					spiel[i + 1] = spiel[i + 1] + "\n";
 				} catch {}
 			}
-			print(spiel.join(""));
+			download("game.pgn", spiel.join(""));
 		}
 	});
 	game = new Chess();
