@@ -170,8 +170,8 @@ function newGame (result){
 			[Time "${d.toUTCString().split(' ')[4]}"]\
 			`;
 
-			print(spiel.join(''));
-			download('game.pgn', spiel.join(''));
+			print(jointpgn);
+			download('game.pgn', jointpgn);
 			spiel = [];
 		} else {
 			spiel = [];
