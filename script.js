@@ -5,9 +5,19 @@ var gewuenschteTiefe = 2; // die Tiefe+1, die verwendet wird
 var print = console.log; // für einfachere Ausgaben
 var pfadbeginn = null; // Pfad zum richtigen Zug
 var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
+var hintergrundDrehung = 0;
 
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
+
+setInterval(() => {
+	$(document.body).css(
+		'background',
+		`linear-gradient(${hintergrundDrehung %
+			360}deg,#707070,#070717)`,
+	);
+	hintergrundDrehung++;
+}, 200);
 
 function shuffleArray (array){
 	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
@@ -35,6 +45,7 @@ function onDragStart (
 }
 
 function proposeDraw (){
+	// Funktion dafür, Remis anzubieten.
 	Swal.fire({
 		title              :
 			'Möchtest Du Remis anbieten?',
@@ -73,6 +84,7 @@ function draw (){
 }
 
 function proposeResign (){
+	// Partie aufgeben
 	Swal.fire({
 		title              :
 			'Möchtest Du aufgeben?',
@@ -98,6 +110,21 @@ function proposeResign (){
 }
 
 function newGame (){
+	Swal.fire({
+		title              : 'Speichern?',
+		text               :
+			'Du kannst dieses Spiel herunterladen und speichern.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			print(game.pgn());
+		}
+	});
 	game = new Chess();
 	board = Chessboard('board', config);
 }
@@ -251,61 +278,57 @@ function onDrop (source, target){
 		}
 	}
 	pfad = '';
-	window.setTimeout(() => {
-		$('#title').html(
-			'Computer denkt nach...',
-		);
-		$("link[rel*='icon']").prop(
-			'href',
-			'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
-		);
+	$('#title').html('Computer denkt nach...');
+	$('#favicon').prop(
+		'href',
+		'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
+	);
 
-		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
-		aktuelleSpielauswertung = bewertung;
-		print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
-		print('Am Zug:' + game.turn()); //gib aus, wer dran ist
-		if (gespeicherterZug == null) {
-			// wenn kein Zug verfügbar ist:
-			print('Kein gültiger Zug'); // gib dies aus
-		} else {
-			game.move(gespeicherterZug);
-			$('#title').html('Du bist dran!');
-			$('#favicon').prop(
-				'href',
-				'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
-			);
-			if (game.game_over()) {
-				if (game.in_checkmate()) {
-					Swal.fire({
-						icon  : 'error',
-						title : '0-1',
-						text  :
-							'Du hast leider verloren. :(',
-					}).then(() => {
-						newGame();
-					});
-				}
-				if (game.in_stalemate()) {
-					Swal.fire({
-						icon  : 'warning',
-						title : '1/2-1/2',
-						text  :
-							'Es ist ein Unentschieden. :|',
-					}).then((result) => {
-						newGame();
-					});
-				}
-			} // spiele den Zug
-		}
-		$('#bar').css(
-			// zeige den aktuellen Spielstand in einer Leiste über dem Brett
-			'width',
-			(-aktuelleSpielauswertung + 10) /
-				20 *
-				100 +
-				'%',
+	bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
+	aktuelleSpielauswertung = bewertung;
+	print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
+	print('Am Zug:' + game.turn()); //gib aus, wer dran ist
+	if (gespeicherterZug == null) {
+		// wenn kein Zug verfügbar ist:
+		print('Kein gültiger Zug'); // gib dies aus
+	} else {
+		game.move(gespeicherterZug);
+		$('#title').html('Du bist dran!');
+		$('#favicon').prop(
+			'href',
+			'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
 		);
-	}, 10);
+		if (game.game_over()) {
+			if (game.in_checkmate()) {
+				Swal.fire({
+					icon  : 'error',
+					title : '0-1',
+					text  :
+						'Du hast leider verloren. :(',
+				}).then(() => {
+					newGame();
+				});
+			}
+			if (game.in_stalemate()) {
+				Swal.fire({
+					icon  : 'warning',
+					title : '1/2-1/2',
+					text  :
+						'Es ist ein Unentschieden. :|',
+				}).then((result) => {
+					newGame();
+				});
+			}
+		} // spiele den Zug
+	}
+	$('#bar').css(
+		// zeige den aktuellen Spielstand in einer Leiste über dem Brett
+		'width',
+		(-aktuelleSpielauswertung + 10) /
+			20 *
+			100 +
+			'%',
+	);
 }
 
 function onSnapEnd (){
