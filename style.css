@@ -80,6 +80,10 @@ ul#options:hover {
 	box-shadow: 10px 10px 11px 1px
 		rgba(0, 0, 0, 0.75);
 }
+.drpd_oncl option {
+	background-color: #232323;
+	color: white;
+}
 #btn_options {
 	width: 45px;
 	height: 45px;

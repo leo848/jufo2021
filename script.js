@@ -109,9 +109,15 @@ $('#cbx_slastm').click(() => {
 	// Einstellung: letzten Zug des PCs zeigen
 	showLastMove = !showLastMove;
 	if (showLastMove) {
-		$(".highlight-black").css("box-shadow", "inset 0 0 3px 3px white")
+		$('.highlight-black').css(
+			'box-shadow',
+			'inset 0 0 3px 3px white',
+		);
 	} else {
-		$(".highlight-black").css("box-shadow", "none")
+		$('.highlight-black').css(
+			'box-shadow',
+			'none',
+		);
 	}
 });
 
@@ -359,7 +365,9 @@ function max (tiefe){
 	if (tiefe == 0 || game.moves().length == 0) {
 		//Wenn die Tiefe null ist oder keine Züge möglich sind, gib die aktuelle Stellung zurück.
 		if (tiefe == gewuenschteTiefe) {
-			gespeicherterZug = zuege[i];
+			try {
+				gespeicherterZug = zuege[i];
+			} catch (e) {}
 		}
 		return evalPosition(game.fen(), -1);
 	}
@@ -460,21 +468,23 @@ function onDrop (source, target){
 	} else {
 		let zug = game.move(gespeicherterZug);
 
-		$board
-			.find('.' + squareClass)
-			.removeClass('highlight-black');
-		$board
-			.find('.square-' + zug.from)
-			.addClass('highlight-black');
-		squareToHighlight = zug.to;
-		colorToHighlight = 'black';
+		if (zug !== null) {
+			$board
+				.find('.' + squareClass)
+				.removeClass('highlight-black');
+			$board
+				.find('.square-' + zug.from)
+				.addClass('highlight-black');
+			squareToHighlight = zug.to;
+			colorToHighlight = 'black';
 
-		spiel.push(zug.san);
-		$('#title').html('Du bist dran!');
-		$('#favicon').prop(
-			'href',
-			'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
-		);
+			spiel.push(zug.san);
+			$('#title').html('Du bist dran!');
+			$('#favicon').prop(
+				'href',
+				'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
+			);
+		}
 		if (game.game_over()) {
 			if (game.in_checkmate()) {
 				Swal.fire({
@@ -572,6 +582,7 @@ var config = {
 	onMouseoverSquare : onMouseoverSquare,
 	onSnapEnd         : onSnapEnd,
 	onMoveEnd         : onMoveEnd,
+	moveSpeed         : 'slow',
 };
 board = Chessboard('board', config);
 
