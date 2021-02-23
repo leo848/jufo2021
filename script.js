@@ -19,6 +19,8 @@ $('#btn_resign').click(proposeResign);
 $('#options_container').hover(
 	// Einstellungen zeigen und ausblenden.
 	() => {
+		$('#options').removeAttr('hidden');
+		$('#options').css('opacity', '0');
 		$('#options').css('opacity', '1');
 	},
 	() => {
@@ -27,6 +29,12 @@ $('#options_container').hover(
 				'opacity',
 				0,
 			);
+			setTimeout(() => {
+				$('#options:not(:hover)').attr(
+					'hidden',
+					'hidden',
+				);
+			}, 2930);
 		}, 930);
 	},
 );
