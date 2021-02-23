@@ -259,13 +259,14 @@ function newGame (rresult){
 			print(jointpgn);
 			download('game.pgn', jointpgn);
 			spiel = [];
+			game = new Chess();
+			board = Chessboard('board', config);
 		} else {
 			spiel = [];
+			game = new Chess();
+			board = Chessboard('board', config);
 		}
 	});
-
-	game = new Chess();
-	board = Chessboard('board', config);
 }
 
 function changePlayer (fen){
