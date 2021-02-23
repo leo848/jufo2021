@@ -8,13 +8,20 @@ var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
 var hintergrundDrehung = 0;
 var spiel = [];
 
+var $board = $('#board');
+var squareClass = 'square-55d63';
+var squareToHighlight = null;
+var colorToHighlight = null; // dafür, dass der Zug des Computers markiert wird
+
 var reducedAnimations = false; // Animationen deaktivieren
 var showLegalMoves = true; // legale Züge anzeigen
 var betterSpeed = true; // schnellere Geschwindigkeit (für Geräte mit schlechter Leistung nicht empfohlen)
 var shuffleMoves = true; // Züge werden für mehr Varianten durchgemischt
+var showLastMove = true; // zeige den letzten Zug des Computers
 
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
+// beim Klicken auf die einzelnen Knöpfe Remis anbieten bzw. aufgeben
 
 $('#options_container').hover(
 	// Einstellungen zeigen und ausblenden.
@@ -40,6 +47,7 @@ $('#options_container').hover(
 );
 
 $('#cbx_redanim').click(() => {
+	// Einstellung: Animationen reduzieren
 	reducedAnimations = !reducedAnimations;
 	if (!reducedAnimations) {
 		$(
@@ -62,6 +70,7 @@ $('#cbx_redanim').click(() => {
 	}
 });
 $('#cbx_showlegals').click(() => {
+	// Einstellung: legale Züge anzeigen
 	showLegalMoves = !showLegalMoves;
 	removeGreySquares();
 
@@ -89,10 +98,21 @@ $('#cbx_showlegals').click(() => {
 	}
 });
 $('#cbx_btspeed').click(() => {
+	// Einstellung: bessere Geschwindigkeit
 	betterSpeed = !betterSpeed;
 });
 $('#cbx_shuffle').click(() => {
+	// Einstellung: Züge mischen
 	shuffleMoves = !shuffleMoves;
+});
+$('#cbx_slastm').click(() => {
+	// Einstellung: letzten Zug des PCs zeigen
+	showLastMove = !showLastMove;
+	if (showLastMove) {
+		$(".highlight-black").css("box-shadow", "inset 0 0 3px 3px white")
+	} else {
+		$(".highlight-black").css("box-shadow", "none")
+	}
 });
 
 setInterval(() => {
@@ -398,13 +418,14 @@ function onDrop (source, target){
 	if (move === null) return 'snapback';
 	// Wenn der Zug ungültig ist,nehme ihn zurück
 	spiel.push(move.san);
+	// speichere den Zug für das spätere Herunterladen
 
 	if (game.game_over()) {
 		if (game.in_checkmate()) {
 			Swal.fire({
 				icon  : 'success',
 				title : '1-0 👍',
-				text  : 'Du hast gewonnen.',
+				text  : 'Du hast gewonnen. :)',
 			}).then((result) => {
 				newGame(2);
 			});
@@ -438,6 +459,16 @@ function onDrop (source, target){
 		print('Kein gültiger Zug'); // gib dies aus
 	} else {
 		let zug = game.move(gespeicherterZug);
+
+		$board
+			.find('.' + squareClass)
+			.removeClass('highlight-black');
+		$board
+			.find('.square-' + zug.from)
+			.addClass('highlight-black');
+		squareToHighlight = zug.to;
+		colorToHighlight = 'black';
+
 		spiel.push(zug.san);
 		$('#title').html('Du bist dran!');
 		$('#favicon').prop(
@@ -524,6 +555,14 @@ function onMouseoutSquare (square, piece){
 	removeGreySquares();
 }
 
+function onMoveEnd (){
+	$board
+		.find('.square-' + squareToHighlight)
+		.addClass(
+			'highlight-' + colorToHighlight,
+		);
+}
+
 var config = {
 	draggable         : true,
 	position          : 'start',
@@ -532,6 +571,7 @@ var config = {
 	onMouseoutSquare  : onMouseoutSquare,
 	onMouseoverSquare : onMouseoverSquare,
 	onSnapEnd         : onSnapEnd,
+	onMoveEnd         : onMoveEnd,
 };
 board = Chessboard('board', config);
 
