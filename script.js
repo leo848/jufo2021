@@ -286,11 +286,13 @@ function newGame (rresult){
 			download('game.pgn', jointpgn);
 			spiel = [];
 			game = new Chess();
-			board = Chessboard('board', config);
+			board.position(game.fen());
+			// board = Chessboard('board', config);
 		} else {
 			spiel = [];
 			game = new Chess();
-			board = Chessboard('board', config);
+			board.position(game.fen());
+			// board = Chessboard('board', config);
 		}
 	});
 }
