@@ -481,7 +481,7 @@ function onDrop (source, target){
 			colorToHighlight = 'black';
 
 			spiel.push(zug.san);
-			$('#title').html('Du bist dran!');
+			$('#title').html('Du bist am Zug!');
 			$('#favicon').prop(
 				'href',
 				'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
