@@ -77,6 +77,8 @@ ul#options:hover {
 	background-color: white;
 	color: #232323;
 	transform: scale(0.93);
+	box-shadow: 10px 10px 11px 1px
+		rgba(0, 0, 0, 0.75);
 }
 #btn_options {
 	width: 45px;
@@ -100,6 +102,11 @@ ul#options {
 	padding: 10px;
 	transition: 2s;
 	opacity: 0;
+	box-shadow: none;
+}
+ul#options:hover {
+	box-shadow: 20px 20px 11px 1px
+		rgba(0, 0, 0, 0.75);
 }
 #btn_options img {
 	width: 30px;
