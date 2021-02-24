@@ -121,7 +121,10 @@ $('#cbx_slastm').click(() => {
 		);
 	}
 });
-
+$('#cbx_taptm').click(()=>{
+	tapToMove = !tapToMove;
+	
+})
 setInterval(() => {
 	if (!reducedAnimations) {
 		$(document.body).css(
