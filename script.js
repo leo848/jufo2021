@@ -337,29 +337,28 @@ function evalPosition (position, spieler){
 	let chess = new Chess(position);
 	let fen = chess.fen();
 
-	let eval = 0;
+	let eval = 0; // Anfangswert ist 0
 
-	if (chess.game_over()) {
-		if (chess.in_checkmate()) {
-			return spieler * Infinity;
+	if (chess.game_over()) { // wenn das Spiel vorbei ist, dann...
+		if (chess.in_checkmate()) { // wenn es Schachmatt ist,
+			return spieler * 10000; // gib den Gewinn für diesen Spieler aus
 		}
 		if (
-			chess.in_draw() ||
+			chess.in_draw() || // bei Remis oder Patt,
 			chess.in_stalemate()
 		) {
-			return 0;
+			return 0; // gib 0 als Remiswert zurück
 		}
-		return 'What just happened?';
 	}
 
-	pos = fen.split(' ')[0];
-	pcs = pos.match(/[a-zA-Z]/g);
+	pos = fen.split(' ')[0]; // Position wird aufgeteilt
+	pcs = pos.match(/[a-zA-Z]/g); // Figuren werden geladen
 
-	for (let i = 0; i < pcs.length; i++) {
-		eval += PIECE_VALUES[pcs[i]];
-		eval = Number(eval.toFixed(2));
+	for (let i = 0; i < pcs.length; i++) { // Für jede Figur:
+		eval += PIECE_VALUES[pcs[i]]; // Der Wert wird berechnet und addiert
+		eval = Number(eval.toFixed(2)); // und der Floating-Point-Fehler (0.1 + 0.2 == 0.30000000000000004)
 	}
-	return eval;
+	return eval; // am Ende wird die Summe 
 }
 
 function max (tiefe){
