@@ -491,8 +491,9 @@ function onDrop (source, target){
 			);
 		}
 		if (game.game_over()) {
+			print("lol", game.turn())
 			if (game.in_checkmate()) {
-				if (game.turn() == "b"){
+				if (game.turn() == "w"){
 				Swal.fire({
 					icon  : 'error',
 					title : '0-1 👎',
