@@ -492,6 +492,7 @@ function onDrop (source, target){
 		}
 		if (game.game_over()) {
 			if (game.in_checkmate()) {
+				if (game.turn() == "w"){
 				Swal.fire({
 					icon  : 'error',
 					title : '0-1 👎',
@@ -499,7 +500,16 @@ function onDrop (source, target){
 						'Du hast leider verloren. :(',
 				}).then(() => {
 					newGame(0);
+				});} else {
+					Swal.fire({
+					icon  : 'success',
+					title : '1-0 👍',
+					text  :
+						'Du hast gewonnen! :)',
+				}).then(() => {
+					newGame(0);
 				});
+				}
 			}
 			if (game.in_stalemate()) {
 				Swal.fire({
