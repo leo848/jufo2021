@@ -18,6 +18,7 @@ var showLegalMoves = true; // legale Züge anzeigen
 var betterSpeed = true; // schnellere Geschwindigkeit (für Geräte mit schlechter Leistung nicht empfohlen)
 var shuffleMoves = true; // Züge werden für mehr Varianten durchgemischt
 var showLastMove = true; // zeige den letzten Zug des Computers
+var tapToMove = false;
 
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
@@ -120,7 +121,10 @@ $('#cbx_slastm').click(() => {
 		);
 	}
 });
-
+$('#cbx_taptm').click(()=>{
+	tapToMove = !tapToMove;
+	
+})
 setInterval(() => {
 	if (!reducedAnimations) {
 		$(document.body).css(
