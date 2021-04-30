@@ -217,7 +217,8 @@ function newGame (rresult){
 
 			print(jointpgn);
 			promptText('Enter your game file name', 'game').then((res) => {
-				fileName = res.value.replace(/\.pgn/gi, '') + '.pgn';
+				fileName =
+					(res.value.replace(/\.pgn/gi, '') || 'game') + '.pgn';
 				download(fileName, jointpgn);
 				spiel = [];
 				game = new Chess();
