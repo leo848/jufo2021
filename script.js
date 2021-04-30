@@ -116,22 +116,6 @@ function shuffleArray (array){
 	return array;
 }
 
-function download (filename, text){
-	var element = document.createElement('a');
-	element.setAttribute(
-		'href',
-		'data:text/plain;charset=utf-8,' + encodeURIComponent(text),
-	);
-	element.setAttribute('download', filename);
-
-	element.style.display = 'none';
-	document.body.appendChild(element);
-
-	element.click();
-
-	document.body.removeChild(element);
-}
-
 function onDragStart (source, piece, position, orientation){
 	// wenn ein Zug anfängt, dann...
 	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
@@ -232,10 +216,14 @@ function newGame (rresult){
 			` + spiel.join('');
 
 			print(jointpgn);
-			download('game.pgn', jointpgn);
-			spiel = [];
-			game = new Chess();
-			board.position(game.fen());
+			promptText('Enter your game file name', 'game').then((res) => {
+				fileName = res.value.replace(/\.pgn/gi, '') + '.pgn';
+				download('fileName', jointpgn);
+				spiel = [];
+				game = new Chess();
+				board.position(game.fen());
+			});
+
 			// board = Chessboard('board', config);
 		} else {
 			spiel = [];
@@ -286,7 +274,7 @@ function evalPosition (position, spieler){
 	let chess = new Chess(position);
 	let fen = chess.fen();
 
-	let eval = 0; // Anfangswert ist 0
+	let positionEvaluation = 0; // Anfangswert ist 0
 
 	if (chess.game_over()) {
 		// wenn das Spiel vorbei ist, dann...
@@ -307,10 +295,10 @@ function evalPosition (position, spieler){
 
 	for (let i = 0; i < pcs.length; i++) {
 		// Für jede Figur:
-		eval += PIECE_VALUES[pcs[i]]; // Der Wert wird berechnet und addiert
-		eval = Number(eval.toFixed(2)); // und der Floating-Point-Fehler (0.1 + 0.2 == 0.30000000000000004)
+		positionEvaluation += PIECE_VALUES[pcs[i]]; // Der Wert wird berechnet und addiert
+		positionEvaluation = Number(positionEvaluation.toFixed(2)); // und der Floating-Point-Fehler (0.1 + 0.2 == 0.30000000000000004)
 	}
-	return eval; // am Ende wird die Summe
+	return positionEvaluation; // am Ende wird die Summe
 }
 
 function max (tiefe){
@@ -376,27 +364,11 @@ function onDrop (source, target){
 	// speichere den Zug für das spätere Herunterladen
 
 	if (game.game_over()) {
-		if (game.in_checkmate()) {
-			Swal.fire({
-				icon  : 'success',
-				title : '1-0 👍',
-				text  : 'Du hast gewonnen. :)',
-			}).then((result) => {
-				newGame(2);
-			});
-			//Wenn der Nutzer gewonnen hat, zeige ihm dies.
-		}
-		if (game.in_draw()) {
-			Swal.fire({
-				icon  : 'warning',
-				title : '1/2-1/2 👌',
-				text  : 'Es ist ein Unentschieden. :|',
-			}).then((result) => {
-				newGame(1);
-			});
-			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
-		}
+		triggerGameAlert(game);
+		return;
+		//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
 	}
+
 	pfad = '';
 	$('#title').html('Computer denkt nach...');
 	$('#favicon').prop(
@@ -428,8 +400,7 @@ function onDrop (source, target){
 			);
 		}
 		if (game.game_over()) {
-			print('lol', game.turn());
-			triggerAlert(game);
+			triggerGameAlert(game);
 		} // spiele den Zug
 	}
 	$('#bar').css(
@@ -498,5 +469,3 @@ var config = {
 	moveSpeed         : 'slow',
 };
 board = Chessboard('board', config);
-
-setInterval(board.position(game.fen()), 500); // aktualisiere das Brett jede halbe Sekunde
