@@ -6,7 +6,8 @@ function triggerWinAlert (){
 	}).then(() => {
 		newGame(0);
 	});
-}
+} // Löse den Alert für ein Gewinn aus.
+
 function triggerDrawAlert (){
 	Swal.fire({
 		icon  : 'warning',
@@ -15,7 +16,8 @@ function triggerDrawAlert (){
 	}).then((result) => {
 		newGame(1);
 	});
-}
+} // Löse den Alert für ein Unentschieden aus.
+
 function triggerLoseAlert (){
 	Swal.fire({
 		icon  : 'error',
@@ -24,7 +26,7 @@ function triggerLoseAlert (){
 	}).then(() => {
 		newGame(0);
 	});
-}
+} // Löse den Alert für einen Verlust aus.
 
 function triggerGameAlert (game){
 	print(game.turn());
@@ -44,7 +46,7 @@ function triggerGameAlert (game){
 	if (result == '0-1') {
 		triggerLoseAlert();
 	}
-}
+} // Entscheidungsfunktion, die einen Alert für ein Spiel auslöst.
 
 async function promptText (promptStart, placeholder = 'Type something...'){
 	let result = await Swal.fire({
@@ -53,13 +55,13 @@ async function promptText (promptStart, placeholder = 'Type something...'){
 		inputPlaceholder : placeholder,
 	});
 	return result;
-}
+} // Frage den Nutzer nach einem Text und gebe ihn zurück.
 
-function download (filename, text){
+function download (filename, content){
 	var element = document.createElement('a');
 	element.setAttribute(
 		'href',
-		'data:text/plain;charset=utf-8,' + encodeURIComponent(text),
+		'data:text/plain;charset=utf-8,' + encodeURIComponent(content),
 	);
 	element.setAttribute('download', filename);
 
@@ -69,4 +71,4 @@ function download (filename, text){
 	element.click();
 
 	document.body.removeChild(element);
-}
+} // Lade eine Datei mit dem Dateinamen filename und dem Inhalt content herunter.
