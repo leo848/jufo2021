@@ -197,7 +197,7 @@ function newGame (rresult){
 		if (result.isConfirmed) {
 			for (let i = 0; i < spiel.length; i += 2) {
 				spiel[i] = (i + 2) / 2 + '. ' + spiel[i] + ' ';
-				if (spiel[i] !== undefined) {
+				if (spiel[i] !== undefined && spiel[i+1] !== undefined) {
 					spiel[i + 1] = spiel[i + 1] + '\n';
 				}
 			}
@@ -205,15 +205,15 @@ function newGame (rresult){
 			d = new Date();
 			jointpgn =
 				`\
-			[White "Nutzer"]
-			[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
-			[Result "${RESULTS[rresult]}"]
-			[Variant "Standard"]
-			[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() + 1).toString().length == 1
+[White "Nutzer"]
+[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
+[Result "${RESULTS[rresult]}"]
+[Variant "Standard"]
+[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() + 1).toString().length == 1
 					? '0' + (d.getUTCMonth() + 1)
 					: d.getUTCMonth() + 1}"]
-			[Time "${d.toUTCString().split(' ')[4]}"]
-			` + spiel.join('');
+[Time "${d.toUTCString().split(' ')[4]}"]
+` + spiel.join('');
 
 			print(jointpgn);
 			promptText('Enter your game file name', 'game').then((res) => {

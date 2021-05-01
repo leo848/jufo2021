@@ -22,15 +22,21 @@
 		</div>
 		<!-- <div id="twobar">|</div> -->
 		<div id="board"></div>
-		<div id="buttons"><button id="btn_remis" class="btn_oncl">Remis anbieten</button>
-			<button id="btn_resign" class="btn_oncl">Aufgeben und neues Spiel</button><select id="drpd_figure"
-				class="drpd_oncl">
+		<div id="buttons">
+			<button id="btn_remis" class="btn_oncl">Remis</button>
+			<button id="btn_resign" class="btn_oncl">Aufgeben</button>
+			<select id="drpd_figure" class="drpd_oncl">
 				<option value="q" selected>♕</option>
 				<option value="r">♖</option>
 				<option value="b">♗</option>
 				<option value="n">♘</option>
-			</select><br>
+			</select>
+			<button id="btn_undo" class="btn_oncl"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+			<button id="btn_redo" class="btn_oncl"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
 		</div>
+		<br>
+		<input type="file" name="" id="pgn_input">
+		<div id="content-target"></div>
 
 	</div>
 	<div id="options_container">
@@ -39,16 +45,21 @@
 			<ul id="options">
 				<li>Animationen reduzieren&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbx_redanim"></li>
 				<li>Legale Züge zeigen&nbsp;&nbsp;&nbsp;<input type="checkbox" checked id="cbx_showlegals"></li>
-				<li>Verbesserte Geschwindigkeit&nbsp;&nbsp;&nbsp;<input type="checkbox" checked id="cbx_btspeed"></li>
+				<li>Verbesserte Geschwindigkeit&nbsp;&nbsp;&nbsp;<input type="checkbox" checked id="cbx_btspeed">
+				</li>
 				<li>Züge mischen&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbx_shuffle" checked></li>
 				<li>Letzten Zug zeigen&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbx_slastm" checked></li>
 				<li>Tippen zum Ziehen&nbsp;&nbsp;&nbsp;<input type="checkbox" id="cbx_taptm"></li>
+				<li>
+
+				</li>
 			</ul>
 		</div>
 	</div>
 
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 	<script src="https://kit.fontawesome.com/716035a6d4.js" crossorigin="anonymous"></script>
 	<script src="chess.js"></script>
