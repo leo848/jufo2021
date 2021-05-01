@@ -1,12 +1,13 @@
 var board = null; // starte mit einem leeren Brett
 var game = new Chess(); // in diesem Objekt wird das Schachspiel behandelt
-var gespeicherterZug = null; // das hier speichert den Zug, der gespielt wird
+var savedMove = null; // das hier speichert den Zug, der gespielt wird
 var gewuenschteTiefe = 2; // die Tiefe+1, die verwendet wird
 var print = console.log; // für einfachere Ausgaben
-var pfadbeginn = null; // Pfad zum richtigen Zug
-var aktuelleSpielauswertung = 0; // aktuelle Bewertung des Bretts
-var hintergrundDrehung = 0;
-var spiel = [];
+var pathStart = null; // Pfad zum richtigen Zug
+var currentEvaluation = 0; // aktuelle Bewertung des Bretts
+var backgroundRotation = 0;
+var gameStack = [];
+var redoStack = [];
 
 var $board = $('#board');
 var squareClass = 'square-55d63';
@@ -101,9 +102,9 @@ setInterval(() => {
 	if (!reducedAnimations) {
 		$(document.body).css(
 			'background',
-			`linear-gradient(${hintergrundDrehung % 360}deg,#707070,#070717)`,
+			`linear-gradient(${backgroundRotation % 360}deg,#707070,#070717)`,
 		);
-		hintergrundDrehung++;
+		backgroundRotation++;
 	}
 }, 200);
 
@@ -122,118 +123,7 @@ function onDragStart (source, piece, position, orientation){
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 }
 
-function proposeDraw (){
-	// Funktion dafür, Remis anzubieten.
-	Swal.fire({
-		title              : 'Möchtest Du Remis anbieten?',
-		text               :
-			'Falls das Remis angenommen wird, kannst du diese Partie nicht wiederherstellen.',
-		icon               : 'question',
-		showCancelButton   : true,
-		confirmButtonColor : '#3085d6',
-		cancelButtonColor  : '#d33',
-		confirmButtonText  : 'Ja',
-		cancelButtonText   : 'Nein',
-	}).then((result) => {
-		if (result.isConfirmed) {
-			if (aktuelleSpielauswertung < -0.2) {
-				draw();
-			} else {
-				Swal.fire({
-					icon  : 'info',
-					title : 'Nicht akzeptiert',
-					text  : 'Dein Remisangebot wurde abgelehnt.',
-				});
-			}
-		}
-	});
-}
 
-function draw (){
-	Swal.fire({
-		icon  : 'warning',
-		title : '1/2-1/2',
-		text  : 'Es ist ein Unentschieden. :|',
-	}).then((result) => {
-		newGame(1);
-	});
-}
-
-function proposeResign (){
-	// Partie aufgeben
-	Swal.fire({
-		title              : 'Möchtest Du aufgeben?',
-		text               : 'Aufgeben muss immer die letzte Option sein.',
-		icon               : 'question',
-		showCancelButton   : true,
-		confirmButtonColor : '#3085d6',
-		cancelButtonColor  : '#d33',
-		confirmButtonText  : 'Ja',
-		cancelButtonText   : 'Nein',
-	}).then((result) => {
-		if (result.isConfirmed) {
-			Swal.fire({
-				icon  : 'error',
-				title : '0-1',
-				text  : 'Du hast leider verloren. :(',
-			});
-			newGame(0);
-		}
-	});
-}
-
-function newGame (rresult){
-	Swal.fire({
-		title              : 'Speichern?',
-		text               :
-			'Du kannst dieses Spiel herunterladen und speichern.',
-		icon               : 'question',
-		showCancelButton   : true,
-		confirmButtonColor : '#3085d6',
-		cancelButtonColor  : '#d33',
-		confirmButtonText  : 'Ja',
-		cancelButtonText   : 'Nein',
-	}).then((result) => {
-		if (result.isConfirmed) {
-			for (let i = 0; i < spiel.length; i += 2) {
-				spiel[i] = (i + 2) / 2 + '. ' + spiel[i] + ' ';
-				if (spiel[i] !== undefined && spiel[i+1] !== undefined) {
-					spiel[i + 1] = spiel[i + 1] + '\n';
-				}
-			}
-			print(spiel);
-			d = new Date();
-			jointpgn =
-				`\
-[White "Nutzer"]
-[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
-[Result "${RESULTS[rresult]}"]
-[Variant "Standard"]
-[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() + 1).toString().length == 1
-					? '0' + (d.getUTCMonth() + 1)
-					: d.getUTCMonth() + 1}"]
-[Time "${d.toUTCString().split(' ')[4]}"]
-` + spiel.join('');
-
-			print(jointpgn);
-			promptText('Enter your game file name', 'game').then((res) => {
-				fileName =
-					(res.value.replace(/\.pgn/gi, '') || 'game') + '.pgn';
-				download(fileName, jointpgn);
-				spiel = [];
-				game = new Chess();
-				board.position(game.fen());
-			});
-
-			// board = Chessboard('board', config);
-		} else {
-			spiel = [];
-			game = new Chess();
-			board.position(game.fen());
-			// board = Chessboard('board', config);
-		}
-	});
-}
 
 function changePlayer (fen){
 	// Wechsle den Spieler.
@@ -308,7 +198,7 @@ function max (tiefe){
 		//Wenn die Tiefe null ist oder keine Züge möglich sind, gib die aktuelle Stellung zurück.
 		if (tiefe == gewuenschteTiefe) {
 			try {
-				gespeicherterZug = zuege[i];
+				savedMove = zuege[i];
 			} catch (e) {}
 		}
 		return evalPosition(game.fen(), -1);
@@ -324,7 +214,7 @@ function max (tiefe){
 			//wenn der Zug besser als der bisher beste war:
 			if (tiefe == gewuenschteTiefe) {
 				// speichere den Zug, falls die Tiefe so gewünscht ist
-				gespeicherterZug = zuege[i];
+				savedMove = zuege[i];
 			}
 			maxWert = wert; // stelle die beste Bewertung auf die aktuelle
 		}
@@ -361,7 +251,7 @@ function onDrop (source, target){
 	});
 	if (move === null) return 'snapback';
 	// Wenn der Zug ungültig ist,nehme ihn zurück
-	spiel.push(move.san);
+	gameStack.push(move.san);
 	// speichere den Zug für das spätere Herunterladen
 
 	if (game.game_over()) {
@@ -378,14 +268,14 @@ function onDrop (source, target){
 	);
 
 	bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
-	aktuelleSpielauswertung = bewertung;
-	print('Zug: ' + gespeicherterZug); // gib aus, welcher Zug gespielt wird
+	currentEvaluation = bewertung;
+	print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
 	print('Am Zug:' + game.turn()); //gib aus, wer dran ist
-	if (gespeicherterZug == null) {
+	if (savedMove == null) {
 		// wenn kein Zug verfügbar ist:
 		print('Kein gültiger Zug'); // gib dies aus
 	} else {
-		let zug = game.move(gespeicherterZug);
+		let zug = game.move(savedMove);
 
 		if (zug !== null) {
 			$board.find('.' + squareClass).removeClass('highlight-black');
@@ -393,7 +283,7 @@ function onDrop (source, target){
 			squareToHighlight = zug.to;
 			colorToHighlight = 'black';
 
-			spiel.push(zug.san);
+			gameStack.push(zug.san);
 			$('#title').html('Du bist am Zug!');
 			$('#favicon').prop(
 				'href',
@@ -407,7 +297,7 @@ function onDrop (source, target){
 	$('#bar').css(
 		// zeige den aktuellen Spielstand in einer Leiste über dem Brett
 		'width',
-		(-aktuelleSpielauswertung + 10) / 20 * 100 + '%',
+		(-currentEvaluation + 10) / 20 * 100 + '%',
 	);
 }
 

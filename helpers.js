@@ -121,3 +121,120 @@ function readFileContent (file){
 function pgnSplit (pgn){
 	let split = pgn.split(' ');
 }
+
+
+function proposeDraw (){
+	// Funktion dafür, Remis anzubieten.
+	Swal.fire({
+		title              : 'Möchtest Du Remis anbieten?',
+		text               :
+			'Falls das Remis angenommen wird, kannst du diese Partie nicht wiederherstellen.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			if (currentEvaluation < -0.2) {
+				draw();
+			} else {
+				Swal.fire({
+					icon  : 'info',
+					title : 'Nicht akzeptiert',
+					text  : 'Dein Remisangebot wurde abgelehnt.',
+				});
+			}
+		}
+	});
+}
+
+function draw (){
+	Swal.fire({
+		icon  : 'warning',
+		title : '1/2-1/2',
+		text  : 'Es ist ein Unentschieden. :|',
+	}).then((result) => {
+		newGame(1);
+	});
+}
+
+function proposeResign (){
+	// Partie aufgeben
+	Swal.fire({
+		title              : 'Möchtest Du aufgeben?',
+		text               : 'Aufgeben muss immer die letzte Option sein.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire({
+				icon  : 'error',
+				title : '0-1',
+				text  : 'Du hast leider verloren. :(',
+			});
+			newGame(0);
+		}
+	});
+}
+
+function newGame (rresult){
+	Swal.fire({
+		title              : 'Speichern?',
+		text               :
+			'Du kannst dieses Spiel herunterladen und speichern.',
+		icon               : 'question',
+		showCancelButton   : true,
+		confirmButtonColor : '#3085d6',
+		cancelButtonColor  : '#d33',
+		confirmButtonText  : 'Ja',
+		cancelButtonText   : 'Nein',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			for (let i = 0; i < gameStack.length; i += 2) {
+				gameStack[i] = (i + 2) / 2 + '. ' + gameStack[i] + ' ';
+				if (
+					gameStack[i] !== undefined &&
+					gameStack[i + 1] !== undefined
+				) {
+					gameStack[i + 1] = gameStack[i + 1] + '\n';
+				}
+			}
+			print(gameStack);
+			d = new Date();
+			jointpgn =
+				`\
+[White "Nutzer"]
+[Black "MinimaxBot Stufe ${gewuenschteTiefe}"]
+[Result "${RESULTS[rresult]}"]
+[Variant "Standard"]
+[Date "${d.getUTCFullYear()}.${(d.getUTCMonth() + 1).toString().length == 1
+					? '0' + (d.getUTCMonth() + 1)
+					: d.getUTCMonth() + 1}"]
+[Time "${d.toUTCString().split(' ')[4]}"]
+` + gameStack.join('');
+
+			print(jointpgn);
+			promptText('Enter your game file name', 'game').then((res) => {
+				fileName =
+					(res.value.replace(/\.pgn/gi, '') || 'game') + '.pgn';
+				download(fileName, jointpgn);
+				gameStack = [];
+				game = new Chess();
+				board.position(game.fen());
+			});
+
+			// board = Chessboard('board', config);
+		} else {
+			gameStack = [];
+			game = new Chess();
+			board.position(game.fen());
+			// board = Chessboard('board', config);
+		}
+	});
+}
