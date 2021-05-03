@@ -12,6 +12,7 @@ var redoStack = [];
 var $board = $('#board');
 var boardElem = document.getElementById('board');
 var boardAnimCounter = 0;
+var currentlyInTransition = false;
 var squareClass = 'square-55d63';
 var squareToHighlight = null;
 var colorToHighlight = null; // dafür, dass der Zug des Computers markiert wird
@@ -123,6 +124,7 @@ function onDragStart (source, piece, position, orientation){
 	// wenn ein Zug anfängt, dann...
 	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
+	if (currentlyInTransition) return false;
 }
 
 function changePlayer (fen){
@@ -253,61 +255,64 @@ function onDrop (source, target){
 	// Wenn der Zug ungültig ist,nehme ihn zurück
 
 	$board.find('.square-' + move.to).on('transitionend', () => {
+		currentlyInTransition = true;
+
 		console.log('hi');
 		$board.find('.square-' + move.to).off('transitionend');
-	});
+		gameStack.push(move.san);
+		// speichere den Zug für das spätere Herunterladen
 
-	gameStack.push(move.san);
-	// speichere den Zug für das spätere Herunterladen
-
-	if (game.game_over()) {
-		triggerGameAlert(game);
-		return;
-		//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
-	}
-
-	pfad = '';
-	$('#title').html('Computer denkt nach...');
-	$('#favicon').prop(
-		'href',
-		'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
-	);
-
-	console.time('Zugzeit');
-
-	bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
-	console.timeEnd('Zugzeit');
-	currentEvaluation = bewertung;
-	print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
-	print('Am Zug:' + game.turn()); //gib aus, wer dran ist
-	if (savedMove == null) {
-		// wenn kein Zug verfügbar ist:
-		print('Kein gültiger Zug'); // gib dies aus
-	} else {
-		let zug = game.move(savedMove);
-
-		if (zug !== null) {
-			$board.find('.' + squareClass).removeClass('highlight-black');
-			$board.find('.square-' + zug.from).addClass('highlight-black');
-			squareToHighlight = zug.to;
-			colorToHighlight = 'black';
-
-			gameStack.push(zug.san);
-			$('#title').html('Du bist am Zug!');
-			$('#favicon').prop(
-				'href',
-				'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
-			);
-		}
 		if (game.game_over()) {
 			triggerGameAlert(game);
-		} // spiele den Zug
-	}
-	$('#bar').css(
-		// zeige den aktuellen Spielstand in einer Leiste über dem Brett
-		'width',
-		(-currentEvaluation + 10) / 20 * 100 + '%',
-	);
+			return;
+			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
+		}
+
+		pfad = '';
+		$('#title').html('Computer denkt nach...');
+		$('#favicon').prop(
+			'href',
+			'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
+		);
+
+		console.time('Zugzeit');
+
+		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
+		console.timeEnd('Zugzeit');
+		currentEvaluation = bewertung;
+		print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
+		print('Am Zug:' + game.turn()); //gib aus, wer dran ist
+		if (savedMove == null) {
+			// wenn kein Zug verfügbar ist:
+			print('Kein gültiger Zug'); // gib dies aus
+		} else {
+			let zug = game.move(savedMove);
+
+			if (zug !== null) {
+				$board.find('.' + squareClass).removeClass('highlight-black');
+				$board.find('.square-' + zug.from).addClass('highlight-black');
+				squareToHighlight = zug.to;
+				colorToHighlight = 'black';
+
+				gameStack.push(zug.san);
+				$('#title').html('Du bist am Zug!');
+				$('#favicon').prop(
+					'href',
+					'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
+				);
+			}
+			if (game.game_over()) {
+				triggerGameAlert(game);
+			} // spiele den Zug
+		}
+		$('#bar').css(
+			// zeige den aktuellen Spielstand in einer Leiste über dem Brett
+			'width',
+			(-currentEvaluation + 10) / 20 * 100 + '%',
+		);
+		board.position(game.fen());
+		currentlyInTransition = false;
+	});
 }
 
 function onSnapEnd (){
