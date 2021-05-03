@@ -10,6 +10,8 @@ var gameStack = [];
 var redoStack = [];
 
 var $board = $('#board');
+var boardElem = document.getElementById('board');
+var boardAnimCounter = 0;
 var squareClass = 'square-55d63';
 var squareToHighlight = null;
 var colorToHighlight = null; // dafür, dass der Zug des Computers markiert wird
@@ -122,8 +124,6 @@ function onDragStart (source, piece, position, orientation){
 	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 }
-
-
 
 function changePlayer (fen){
 	// Wechsle den Spieler.
@@ -251,6 +251,12 @@ function onDrop (source, target){
 	});
 	if (move === null) return 'snapback';
 	// Wenn der Zug ungültig ist,nehme ihn zurück
+
+	$board.find('.square-' + move.to).on('transitionend', () => {
+		console.log('hi');
+		$board.find('.square-' + move.to).off('transitionend');
+	});
+
 	gameStack.push(move.san);
 	// speichere den Zug für das spätere Herunterladen
 
@@ -267,7 +273,10 @@ function onDrop (source, target){
 		'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
 	);
 
+	console.time('Zugzeit');
+
 	bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
+	console.timeEnd('Zugzeit');
 	currentEvaluation = bewertung;
 	print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
 	print('Am Zug:' + game.turn()); //gib aus, wer dran ist

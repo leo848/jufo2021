@@ -238,3 +238,9 @@ function newGame (rresult){
 		}
 	});
 }
+
+function undoLastMove() {
+	
+}
+
+function redoLastMove(){}
