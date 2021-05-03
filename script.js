@@ -26,6 +26,9 @@ var tapToMove = false;
 
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
+
+$('#btn_undo').click(undoLastMove);
+$('#btn_redo').click(redoLastMove);
 // beim Klicken auf die einzelnen Knöpfe Remis anbieten bzw. aufgeben
 
 $('#options_container').hover(
@@ -110,15 +113,6 @@ setInterval(() => {
 		backgroundRotation++;
 	}
 }, 200);
-
-function shuffleArray (array){
-	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
-	for (let i = array.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[ array[i], array[j] ] = [ array[j], array[i] ];
-	}
-	return array;
-}
 
 function onDragStart (source, piece, position, orientation){
 	// wenn ein Zug anfängt, dann...
@@ -257,12 +251,12 @@ function onDrop (source, target){
 	$board.find('.square-' + move.to).on('transitionend', () => {
 		currentlyInTransition = true;
 
-		console.log('hi');
 		$board.find('.square-' + move.to).off('transitionend');
 		gameStack.push(move.san);
 		// speichere den Zug für das spätere Herunterladen
 
 		if (game.game_over()) {
+			currentlyInTransition = false;
 			triggerGameAlert(game);
 			return;
 			//Wenn es ein Unentschieden (z.B. durch Patt) ist, zeige dem Nutzer dies.
@@ -280,8 +274,8 @@ function onDrop (source, target){
 		bewertung = max(gewuenschteTiefe); // bewerte die aktuelle Stellung
 		console.timeEnd('Zugzeit');
 		currentEvaluation = bewertung;
-		print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
-		print('Am Zug:' + game.turn()); //gib aus, wer dran ist
+		//print('Zug: ' + savedMove); // gib aus, welcher Zug gespielt wird
+		//print('Am Zug:' + game.turn()); //gib aus, wer dran ist
 		if (savedMove == null) {
 			// wenn kein Zug verfügbar ist:
 			print('Kein gültiger Zug'); // gib dies aus

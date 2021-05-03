@@ -122,13 +122,12 @@ function pgnSplit (pgn){
 	let split = pgn.split(' ');
 }
 
-
 function proposeDraw (){
 	// Funktion dafür, Remis anzubieten.
 	Swal.fire({
 		title              : 'Möchtest Du Remis anbieten?',
 		text               :
-			'Falls das Remis angenommen wird, kannst du diese Partie nicht wiederherstellen.',
+			'Falls das Remis angenommen wird, kannst du diese Partie speichern.',
 		icon               : 'question',
 		showCancelButton   : true,
 		confirmButtonColor : '#3085d6',
@@ -239,8 +238,32 @@ function newGame (rresult){
 	});
 }
 
-function undoLastMove() {
-	
+function undoLastMove (){
+	redoStack.push(gameStack.pop());
+	redoStack.push(gameStack.pop());
+	game.undo();
+	game.undo();
+
+	board.position(game.fen());
 }
 
-function redoLastMove(){}
+function redoLastMove (){
+	let r = redoStack.pop();
+	game.move(r);
+	gameStack.push(r);
+	r = redoStack.pop();
+	game.move(r);
+	gameStack.push(redoStack.pop());
+
+	board.position(game.fen());
+}
+
+
+function shuffleArray (array){
+	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[ array[i], array[j] ] = [ array[j], array[i] ];
+	}
+	return array;
+}
