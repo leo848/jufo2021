@@ -56,9 +56,9 @@ $('#cbx_redanim').click(() => {
 		$('button,select').css('transition', '.93s');
 		$('#board *').css('transition', '.5s');
 	} else {
-		$('#option_container,#bar,ul#options').css('transition', 'none');
-		$('button,select').css('transition', 'none');
-		$('#board *').css('transition', 'none');
+		$('#option_container,#bar,ul#options').css('transition', '.01s');
+		$('button,select').css('transition', '.01s');
+		$('#board *').css('transition', '.01s');
 	}
 });
 $('#cbx_showlegals').click(() => {
@@ -154,6 +154,44 @@ function changePlayer (fen){
 			parts[5]
 		);
 	}
+}
+
+function checkEvalPosition (position, spieler){
+	// console.time('total');
+	// console.time('chess+fen');
+	let chess = new Chess(position);
+	let fen = chess.fen();
+
+	let positionEvaluation = 0; // Anfangswert ist 0
+	// console.timeEnd('chess+fen');
+
+	// console.time('gameOver');
+
+	
+		if (chess.in_checkmate())
+			return spieler * 10000; // gib den Gewinn für diesen Spieler aus
+		
+		else if (
+			chess.in_draw()
+		) return 0
+	
+
+	// console.timeEnd('gameOver');
+
+	// console.time('rest');
+
+	pos = fen.split(' ')[0]; // Position wird aufgeteilt
+	pcs = pos.match(/[a-zA-Z]/g); // Figuren werden geladen
+
+	for (let i = 0; i < pcs.length; i++) {
+		// Für jede Figur:
+		positionEvaluation += PIECE_VALUES[pcs[i]]; // Der Wert wird berechnet und addiert
+		positionEvaluation = Number(positionEvaluation.toFixed(2)); // und der Floating-Point-Fehler (0.1 + 0.2 == 0.30000000000000004)
+	}
+
+	// console.timeEnd('rest');
+	// console.timeEnd('total');
+	return positionEvaluation;
 }
 
 function evalPosition (position, spieler){
