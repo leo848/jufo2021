@@ -221,9 +221,8 @@ function evalPosition (position, spieler){
 	for (let i = 0; i < pcs.length; i++) {
 		// Für jede Figur:
 		positionEvaluation += PIECE_VALUES[pcs[i]]; // Der Wert wird berechnet und addiert
-		positionEvaluation = Number(positionEvaluation.toFixed(2)); // und der Floating-Point-Fehler (0.1 + 0.2 == 0.30000000000000004)
 	}
-	return positionEvaluation; // am Ende wird die Summe
+	return Number(positionEvaluation.toFixed(2)); // am Ende wird die Summe
 }
 
 function max (tiefe){
