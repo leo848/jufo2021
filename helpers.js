@@ -273,7 +273,7 @@ function shuffleArray (array){
 }
 
 function getSavedGames (){
-	return eval(window.localStorage.getItem('jufo2021_games')) || [];
+	return eval("[" + window.localStorage.getItem('jufo2021_games') + "]") || [];
 }
 
 function appendGame (gameHistory){
