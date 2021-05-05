@@ -186,14 +186,17 @@ function newGame (rresult){
 	Swal.fire({
 		title              : 'Speichern?',
 		text               :
-			'Du kannst dieses Spiel herunterladen und speichern.',
+			'Du kannst dieses Spiel auf deinen Computer herunterladen oder im lokalen Speicher dieser Website speichern. ',
 		icon               : 'question',
 		showCancelButton   : true,
+		showDenyButton     : true,
 		confirmButtonColor : '#3085d6',
 		cancelButtonColor  : '#d33',
-		confirmButtonText  : 'Ja',
-		cancelButtonText   : 'Nein',
+		confirmButtonText  : 'Herunterladen',
+		denyButtonText     : 'Hier speichern',
+		cancelButtonText   : 'Abbrechen',
 	}).then((result) => {
+		print(result);
 		if (result.isConfirmed) {
 			for (let i = 0; i < gameStack.length; i += 2) {
 				gameStack[i] = (i + 2) / 2 + '. ' + gameStack[i] + ' ';
@@ -229,6 +232,8 @@ function newGame (rresult){
 			});
 
 			// board = Chessboard('board', config);
+		} else if (result.isDenied) {
+			appendGame(game.history());
 		} else {
 			gameStack = [];
 			game = new Chess();
@@ -258,7 +263,6 @@ function redoLastMove (){
 	board.position(game.fen());
 }
 
-
 function shuffleArray (array){
 	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
 	for (let i = array.length - 1; i > 0; i--) {
@@ -266,4 +270,14 @@ function shuffleArray (array){
 		[ array[i], array[j] ] = [ array[j], array[i] ];
 	}
 	return array;
+}
+
+function getSavedGames (){
+	return eval(window.localStorage.getItem('jufo2021_games')) || [];
+}
+
+function appendGame (gameHistory){
+	let newGameStorage = getSavedGames();
+	newGameStorage.push(JSON.stringify(gameHistory));
+	window.localStorage.setItem('jufo2021_games', newGameStorage);
 }
