@@ -13,6 +13,9 @@ var $board = $('#board');
 var boardElem = document.getElementById('board');
 var boardAnimCounter = 0;
 var currentlyInTransition = false;
+
+var numberOfMovesToUndo = 2;
+
 var squareClass = 'square-55d63';
 var squareToHighlight = null;
 var colorToHighlight = null; // dafür, dass der Zug des Computers markiert wird

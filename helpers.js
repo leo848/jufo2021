@@ -258,7 +258,7 @@ function redoLastMove (){
 	gameStack.push(r);
 	r = redoStack.pop();
 	game.move(r);
-	gameStack.push(redoStack.pop());
+	gameStack.push(r);
 
 	board.position(game.fen());
 }
@@ -279,7 +279,7 @@ function getSavedGames (){
 
 function appendGame (gameHistory){
 	let newGameStorage = JSON.parse(getSavedGames()); // Array
-	newGameStorage.push( gameHistory );
+	newGameStorage.push(gameHistory);
 	console.log(newGameStorage);
 	window.localStorage.setItem(
 		'jufo2021_games',

@@ -117,14 +117,4 @@ ul#options:hover {
 	top: 0;
 }
 
-#pgn_input {
-	opacity: .1;
-	transition: all .5s;
-}
 
-#pgn_input:hover {
-	opacity: 1;
-}
-#pgn_input.draghover {
-	opacity: 1;
-}
