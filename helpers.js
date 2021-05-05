@@ -273,11 +273,16 @@ function shuffleArray (array){
 }
 
 function getSavedGames (){
-	return eval("[" + window.localStorage.getItem('jufo2021_games') + "]") || [];
+	console.log(window.localStorage);
+	return window.localStorage.getItem('jufo2021_games') || '[]';
 }
 
 function appendGame (gameHistory){
-	let newGameStorage = getSavedGames();
-	newGameStorage.push(JSON.stringify(gameHistory));
-	window.localStorage.setItem('jufo2021_games', newGameStorage);
+	let newGameStorage = JSON.parse(getSavedGames()); // Array
+	newGameStorage.push( gameHistory );
+	console.log(newGameStorage);
+	window.localStorage.setItem(
+		'jufo2021_games',
+		JSON.stringify(newGameStorage),
+	);
 }

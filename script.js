@@ -119,6 +119,10 @@ function onDragStart (source, piece, position, orientation){
 	if (game.game_over()) return false; // keinen Zug spielen, wenn das Spiel vorbei ist
 	if (piece.search(/^b/) !== -1) return false; // nur mit den weißen Figuren spielen
 	if (currentlyInTransition) return false;
+
+	if (tapToMove) {
+		
+	}
 }
 
 function changePlayer (fen){
@@ -167,14 +171,11 @@ function checkEvalPosition (position, spieler){
 
 	// console.time('gameOver');
 
-	
-		if (chess.in_checkmate())
-			return spieler * 10000; // gib den Gewinn für diesen Spieler aus
-		
-		else if (
-			chess.in_draw()
-		) return 0
-	
+	if (chess.in_checkmate()) return spieler * 10000;
+	else if (chess.in_draw())
+		// gib den Gewinn für diesen Spieler aus
+
+		return 0;
 
 	// console.timeEnd('gameOver');
 
@@ -300,11 +301,13 @@ function onDrop (source, target){
 		}
 
 		pfad = '';
+		
 		$('#title').html('Computer denkt nach...');
+		if (window.navigator.onLine) {
 		$('#favicon').prop(
 			'href',
 			'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
-		);
+		);}
 
 		console.time('Zugzeit');
 
@@ -327,10 +330,12 @@ function onDrop (source, target){
 
 				gameStack.push(zug.san);
 				$('#title').html('Du bist am Zug!');
-				$('#favicon').prop(
-					'href',
-					'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
-				);
+				if (window.navigator.onLine) {
+					$('#favicon').prop(
+						'href',
+						'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
+					);
+				} 
 			}
 			if (game.game_over()) {
 				triggerGameAlert(game);
