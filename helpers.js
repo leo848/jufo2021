@@ -227,7 +227,7 @@ function undoLastMove (){
 
 	board.position(game.fen());
 }
-Mousetrap.bind('left left', undoLastMove);
+
 
 function redoLastMove (){
 	let r = redoStack.pop();
@@ -241,7 +241,7 @@ function redoLastMove (){
 
 	board.position(game.fen());
 }
-Mousetrap.bind('right right', redoLastMove);
+
 
 function shuffleArray (array){
 	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
