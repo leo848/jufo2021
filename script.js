@@ -30,8 +30,8 @@ var tapToMove = false;
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
 
-Mousetrap.bind("a u f g e b e n", proposeResign);
-Mousetrap.bind("r e m i s", proposeDraw);
+Mousetrap.bind('a u f g e b e n', proposeResign);
+Mousetrap.bind('r e m i s', proposeDraw);
 Mousetrap.bind('left left', undoLastMove);
 Mousetrap.bind('right right', redoLastMove);
 
@@ -129,6 +129,16 @@ function onDragStart (source, piece, position, orientation){
 	if (currentlyInTransition) return false;
 
 	if (tapToMove) {
+		let fieldToGoTo = shuffleArray(
+			game.moves({
+				square  : source,
+				verbose : true,
+			}),
+		)[0].to;
+
+		onDrop(source, fieldToGoTo);
+
+		$board.find('.square-' + fieldToGoTo).trigger('transitionend');
 	}
 }
 

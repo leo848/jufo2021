@@ -53,7 +53,8 @@ body {
 	transition: 2s;
 }
 button,
-select.drpd_oncl {
+select.drpd_oncl,
+.drpd_oncl {
 	position: relative;
 	background-color: transparent;
 	border-radius: 10px;
@@ -67,7 +68,8 @@ select.drpd_oncl {
 }
 button.btn_oncl:hover:not(:active),
 select.drpd_oncl:hover:not(:active),
-ul#options:hover {
+ul#options:hover,
+.btn_oncl:hover:not(:active) {
 	background-color: white;
 	color: #232323;
 	transform: scale(0.93);
