@@ -91,33 +91,6 @@ function download (filename, content){
 	document.body.removeChild(element);
 } // Lade eine Datei mit dem Dateinamen filename und dem Inhalt content herunter.
 
-document.getElementById('pgn_input').addEventListener('change', getFile);
-
-function getFile (event){
-	const input = event.target;
-	if ('files' in input && input.files.length > 0) {
-		placeFileContent(input.files[0]);
-	}
-}
-
-function placeFileContent (file){
-	readFileContent(file)
-		.then((content) => {
-			//target.value = content;
-			triggerPGNReaderAlert(content);
-		})
-		.catch((error) => console.log(error));
-}
-
-function readFileContent (file){
-	const reader = new FileReader();
-	return new Promise((resolve, reject) => {
-		reader.onload = (event) => resolve(event.target.result);
-		reader.onerror = (error) => reject(error);
-		reader.readAsText(file);
-	});
-}
-
 function pgnSplit (pgn){
 	let split = pgn.split(' ');
 }
@@ -255,10 +228,12 @@ function undoLastMove (){
 function redoLastMove (){
 	let r = redoStack.pop();
 	game.move(r);
-	gameStack.push(r);
-	r = redoStack.pop();
-	game.move(r);
-	gameStack.push(r);
+	if (r) {
+		gameStack.push(r);
+		r = redoStack.pop();
+		game.move(r);
+		gameStack.push(r);
+	}
 
 	board.position(game.fen());
 }
@@ -273,14 +248,14 @@ function shuffleArray (array){
 }
 
 function getSavedGames (){
-	console.log(window.localStorage);
+	print(window.localStorage);
 	return window.localStorage.getItem('jufo2021_games') || '[]';
 }
 
 function appendGame (gameHistory){
 	let newGameStorage = JSON.parse(getSavedGames()); // Array
 	newGameStorage.push(gameHistory);
-	console.log(newGameStorage);
+	print(newGameStorage);
 	window.localStorage.setItem(
 		'jufo2021_games',
 		JSON.stringify(newGameStorage),
