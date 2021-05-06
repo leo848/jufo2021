@@ -124,7 +124,6 @@ function onDragStart (source, piece, position, orientation){
 	if (currentlyInTransition) return false;
 
 	if (tapToMove) {
-		
 	}
 }
 
@@ -304,13 +303,14 @@ function onDrop (source, target){
 		}
 
 		pfad = '';
-		
+
 		$('#title').html('Computer denkt nach...');
 		if (window.navigator.onLine) {
-		$('#favicon').prop(
-			'href',
-			'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
-		);}
+			$('#favicon').prop(
+				'href',
+				'https://lichess1.org/assets/_MGIaHK/piece/merida/bP.svg',
+			);
+		}
 
 		console.time('Zugzeit');
 
@@ -338,7 +338,7 @@ function onDrop (source, target){
 						'href',
 						'https://lichess1.org/assets/_MGIaHK/piece/merida/wP.svg',
 					);
-				} 
+				}
 			}
 			if (game.game_over()) {
 				triggerGameAlert(game);

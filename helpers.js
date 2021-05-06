@@ -2,9 +2,9 @@ function triggerWinAlert (){
 	Swal.fire({
 		icon  : 'success',
 		title : '1-0 👍',
-		text  : 'Du hast gewonnen! :)',
+		text  : 'Du hast gewonnen!',
 	}).then(() => {
-		newGame(0);
+		newGame(2);
 	});
 } // Löse den Alert für ein Gewinn aus.
 
@@ -12,8 +12,8 @@ function triggerDrawAlert (){
 	Swal.fire({
 		icon  : 'warning',
 		title : '1/2-1/2 👌',
-		text  : 'Es ist ein Unentschieden. :|',
-	}).then((result) => {
+		text  : 'Es ist ein Unentschieden.',
+	}).then(() => {
 		newGame(1);
 	});
 } // Löse den Alert für ein Unentschieden aus.
@@ -22,7 +22,7 @@ function triggerLoseAlert (){
 	Swal.fire({
 		icon  : 'error',
 		title : '0-1 👎',
-		text  : 'Du hast leider verloren. :(',
+		text  : 'Du hast leider verloren.',
 	}).then(() => {
 		newGame(0);
 	});
@@ -195,7 +195,10 @@ function newGame (rresult){
 ` + gameStack.join('');
 
 			print(jointpgn);
-			promptText('Enter your game file name', 'game').then((res) => {
+			promptText(
+				'Gib den Dateinamen deiner Partie an',
+				'spiel_' + new Date().toLocaleString().replace(/\D/gi, ''),
+			).then((res) => {
 				fileName =
 					(res.value.replace(/\.pgn/gi, '') || 'game') + '.pgn';
 				download(fileName, jointpgn);
@@ -224,6 +227,7 @@ function undoLastMove (){
 
 	board.position(game.fen());
 }
+Mousetrap.bind('left left', undoLastMove);
 
 function redoLastMove (){
 	let r = redoStack.pop();
@@ -237,6 +241,7 @@ function redoLastMove (){
 
 	board.position(game.fen());
 }
+Mousetrap.bind('right right', redoLastMove);
 
 function shuffleArray (array){
 	// Funktion, um alle Elemente in einem Array zufällig zu vertauschen.
