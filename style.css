@@ -50,7 +50,7 @@ body {
 	width: 100%;
 	height: 10px;
 	background-color: white;
-	transition: 2s;
+	transition: .93s;
 }
 button,
 select.drpd_oncl,
@@ -62,7 +62,7 @@ select.drpd_oncl,
 	color: white;
 	padding: 8px;
 	margin: 5px;
-	transition: .93s;
+	transition: .493s;
 	transform: none;
 	font-size: 1.2em;
 }
@@ -99,7 +99,7 @@ ul#options {
 	border: 2px solid white;
 	border-radius: 10px;
 	padding: 10px;
-	transition: 2s;
+	transition: .93s;
 	opacity: 0;
 	box-shadow: none;
 }
@@ -118,5 +118,3 @@ ul#options:hover {
 	left: 0;
 	top: 0;
 }
-
-

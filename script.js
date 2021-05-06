@@ -60,8 +60,8 @@ $('#cbx_redanim').click(() => {
 	// Einstellung: Animationen reduzieren
 	reducedAnimations = !reducedAnimations;
 	if (!reducedAnimations) {
-		$('#option_container,#bar,ul#options').css('transition', '2s');
-		$('button,select').css('transition', '.93s');
+		$('#option_container,#bar,ul#options').css('transition', '.93s');
+		$('button,select').css('transition', '.493s');
 		$('#board *').css('transition', '.5s');
 	} else {
 		$('#option_container,#bar,ul#options').css('transition', '.01s');

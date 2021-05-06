@@ -210,6 +210,9 @@ function newGame (rresult){
 			// board = Chessboard('board', config);
 		} else if (result.isDenied) {
 			appendGame(game.history());
+			gameStack = [];
+			game = new Chess();
+			board.position(game.fen());
 		} else {
 			gameStack = [];
 			game = new Chess();
