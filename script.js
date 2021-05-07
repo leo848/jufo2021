@@ -30,13 +30,13 @@ var tapToMove = false;
 $('#btn_remis').click(proposeDraw);
 $('#btn_resign').click(proposeResign);
 
-Mousetrap.bind('a u f g e b e n', proposeResign);
-Mousetrap.bind('r e m i s', proposeDraw);
-Mousetrap.bind('left left', undoLastMove);
-Mousetrap.bind('right right', redoLastMove);
-
 $('#btn_undo').click(undoLastMove);
-$('#btn_redo').click(redoLastMove);
+$('#btn_undo').click(redoLastMove);
+
+Mousetrap.bind('a u f g e b e n', $('#btn_resign').click);
+Mousetrap.bind('r e m i s', $('#btn_remis').click);
+Mousetrap.bind('left left', $('#btn_undo').click);
+Mousetrap.bind('right right', $('#btn_undo').click);
 // beim Klicken auf die einzelnen Knöpfe Remis anbieten bzw. aufgeben
 
 $('#options_container').hover(
