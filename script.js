@@ -36,7 +36,7 @@ $('#btn_undo').click(redoLastMove);
 Mousetrap.bind('a u f g e b e n', $('#btn_resign').click);
 Mousetrap.bind('r e m i s', $('#btn_remis').click);
 Mousetrap.bind('left left', $('#btn_undo').click);
-Mousetrap.bind('right right', $('#btn_undo').click);
+Mousetrap.bind('right right', $('#btn_redo').click);
 // beim Klicken auf die einzelnen Knöpfe Remis anbieten bzw. aufgeben
 
 $('#options_container').hover(
